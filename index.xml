@@ -6,10 +6,33 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Sep 2019 22:49:39 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 25 Sep 2019 21:48:04 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building Abstractions With Procedures</title>
+      <link>https://isaacverm.github.io/course-notes/building-abstractions-with-procedures/</link>
+      <pubDate>Wed, 25 Sep 2019 21:48:04 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/course-notes/building-abstractions-with-procedures/</guid>
+      <description>process  manipulates data directed by rules (program)  interpreter carries out processes
+why study Lisp blurs distinction between procedures and data</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/25-09-2019/</link>
+      <pubDate>Wed, 25 Sep 2019 21:33:21 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/25-09-2019/</guid>
+      <description>Nice intro to my programming course book. Fuck all that serious shit!
+Christian the absolute mad lad.
+From the book by C.V. Wedgwood I&amp;rsquo;m reading on the Thirty Years&amp;rsquo; War.
+How to make sure you get your money if you pass a village:
+He had issued startling letters, suggestively burnt at the four corners, and bearing the words &#39;Fire! Fire! Blood! Blood!&#39; to every sizeable village he passed.  Or how to handle a right arm amputation graciously:</description>
+    </item>
     
     <item>
       <title></title>
