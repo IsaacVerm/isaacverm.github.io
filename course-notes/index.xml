@@ -21,5 +21,17 @@
 why study Lisp blurs distinction between procedures and data</description>
     </item>
     
+    <item>
+      <title>Elements of Programming</title>
+      <link>https://isaacverm.github.io/course-notes/elements-of-programming/</link>
+      <pubDate>Wed, 25 Sep 2019 21:40:27 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/course-notes/elements-of-programming/</guid>
+      <description>elements in every language  primitive expressions combination abstraction  primitive expressions  most basic entities either  primitive procedures (e.g. +) primitive data (number)   combination build compound elements from simpler elements
+abstraction compound elements can be named and manipulated as units
+types of elements  procedures data  benefit prefix notation  arbitrary number of arguments nesting  repl read-evaluate-print-loop
+define in scheme variables have values</description>
+    </item>
+    
   </channel>
 </rss>

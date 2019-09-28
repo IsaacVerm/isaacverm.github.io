@@ -6,10 +6,21 @@
     <description>Recent content in Observations on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Sep 2019 21:50:36 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 28 Sep 2019 15:11:16 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/observations/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/28-09-2019/</link>
+      <pubDate>Sat, 28 Sep 2019 15:11:16 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/28-09-2019/</guid>
+      <description>Another chess analysis but this time I annotated a bit different than I did for the one of 24-09-2019:
+ less focus on strategy only using local analysis tags  Blunders made are still quite big. These have to be purged first before making sound strategic decisions pay off.
+By default Lichess annotates your game with automated comments like blunder, mistake,&amp;hellip; I found those quite annoying but since there&amp;rsquo;s no option to turn them off somehow forcing you to manually remove them one by one, for the time being I choose to only use local analysis.</description>
+    </item>
     
     <item>
       <title></title>

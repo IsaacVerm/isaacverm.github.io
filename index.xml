@@ -6,10 +6,21 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Sep 2019 21:50:36 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 28 Sep 2019 15:11:16 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/28-09-2019/</link>
+      <pubDate>Sat, 28 Sep 2019 15:11:16 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/28-09-2019/</guid>
+      <description>Another chess analysis but this time I annotated a bit different than I did for the one of 24-09-2019:
+ less focus on strategy only using local analysis tags  Blunders made are still quite big. These have to be purged first before making sound strategic decisions pay off.
+By default Lichess annotates your game with automated comments like blunder, mistake,&amp;hellip; I found those quite annoying but since there&amp;rsquo;s no option to turn them off somehow forcing you to manually remove them one by one, for the time being I choose to only use local analysis.</description>
+    </item>
     
     <item>
       <title></title>
@@ -29,6 +40,18 @@ Being in New York compounded a feeling I had been experiencing, of profound diss
       <guid>https://isaacverm.github.io/course-notes/building-abstractions-with-procedures/</guid>
       <description>process  manipulates data directed by rules (program)  interpreter carries out processes
 why study Lisp blurs distinction between procedures and data</description>
+    </item>
+    
+    <item>
+      <title>Elements of Programming</title>
+      <link>https://isaacverm.github.io/course-notes/elements-of-programming/</link>
+      <pubDate>Wed, 25 Sep 2019 21:40:27 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/course-notes/elements-of-programming/</guid>
+      <description>elements in every language  primitive expressions combination abstraction  primitive expressions  most basic entities either  primitive procedures (e.g. +) primitive data (number)   combination build compound elements from simpler elements
+abstraction compound elements can be named and manipulated as units
+types of elements  procedures data  benefit prefix notation  arbitrary number of arguments nesting  repl read-evaluate-print-loop
+define in scheme variables have values</description>
     </item>
     
     <item>
