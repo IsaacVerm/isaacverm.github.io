@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Exercise 1.5" />
+<meta property="og:description" content="Explanation in blog post easier than the one the book.
+Evaluation:
+ normal order  expand and reduce all functions first then evaluate parameters lazy  applicative order  evaluate and apply function first then formal parameters loop eager   So why does the test work? p will never stop executing when evaluating since there&rsquo;s no stopping condition. So if we use the evaluate and apply model from applicative order evaluation the first thing that will be done is evaluating the p procedure thus hanging the process." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.5/" />
+<meta property="article:published_time" content="2019-09-29T20:25:54+02:00" />
+<meta property="article:modified_time" content="2019-09-29T20:25:54+02:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exercise 1.5"/>
+<meta name="twitter:description" content="Explanation in blog post easier than the one the book.
+Evaluation:
+ normal order  expand and reduce all functions first then evaluate parameters lazy  applicative order  evaluate and apply function first then formal parameters loop eager   So why does the test work? p will never stop executing when evaluating since there&rsquo;s no stopping condition. So if we use the evaluate and apply model from applicative order evaluation the first thing that will be done is evaluating the p procedure thus hanging the process."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Exercise 1.5</h1>
+			<div class="meta">Posted at &mdash; Sep 29, 2019</div>
+		</div>
+
+		<div class="markdown">
+			<script type="application/javascript" src="https://gist.github.com/IsaacVerm/df0b38099e97c2047fe2bf51b2d8bb8b.js"></script>
+
+
+<p>Explanation in <a href="https://www.lvguowei.me/post/sicp-goodness/">blog post</a> easier than the one the book.</p>
+
+<p>Evaluation:</p>
+
+<ul>
+<li>normal order
+
+<ul>
+<li>expand and reduce</li>
+<li>all functions first</li>
+<li>then evaluate parameters</li>
+<li>lazy</li>
+</ul></li>
+<li>applicative order
+
+<ul>
+<li>evaluate and apply</li>
+<li>function first</li>
+<li>then formal parameters</li>
+<li>loop</li>
+<li>eager</li>
+</ul></li>
+</ul>
+
+<p>So why does the test work? p will never stop executing when evaluating since there&rsquo;s no stopping condition. So if we use the <em>evaluate and apply</em> model from applicative order evaluation the first thing that will be done is evaluating the p procedure thus hanging the process.</p>
+
+<p>However, if we use the <em>expand and reduce</em> model from normal order evaluation the p procedure will never be evaluated since it doesn&rsquo;t meet the 0=0 condition.</p>
+
+		</div>
+	</div>
+</body>
+</html>
