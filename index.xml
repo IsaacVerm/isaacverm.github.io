@@ -6,10 +6,51 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 02 Oct 2019 21:56:11 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 03 Oct 2019 21:42:06 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/03-10-2019/</link>
+      <pubDate>Thu, 03 Oct 2019 21:42:06 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/03-10-2019/</guid>
+      <description>Everyone needs their asylum:
+It is an asylum or &amp;ndash; what do they call them now? &amp;ndash; a rest home, for the infirm, the aged, the discontent, and the otherwise incompetent. Look at the three of us &amp;ndash; we are the University. The stranger would not know that we have so much in common, but we know, don&amp;rsquo;t we. We know well.
+Telling tales of drunkenness and cruelty.
+  золотая осень</description>
+    </item>
+    
+    <item>
+      <title>Tips and Tricks</title>
+      <link>https://isaacverm.github.io/course-notes/tips-and-tricks/</link>
+      <pubDate>Thu, 03 Oct 2019 16:08:12 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/course-notes/tips-and-tricks/</guid>
+      <description>Debugging If you use R5RS as language, you can use the trace function to see the call stack.
+E.g.
+(#%require racket/trace) (define (sum-integers a b) (if (&amp;gt; a b) 0 (+ a (sum-integers (+ a 1) b)))) (trace sum-integers) (sum-integers 1 5)  Don&amp;rsquo;t forget to specify the require because [trace] is not included in R5D5 by default.</description>
+    </item>
+    
+    <item>
+      <title>Higher Order Procedures</title>
+      <link>https://isaacverm.github.io/course-notes/higher-order-procedures-definitions/</link>
+      <pubDate>Thu, 03 Oct 2019 15:28:01 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/course-notes/higher-order-procedures-definitions/</guid>
+      <description>List higher order procedure
+goal higher order procedure
+higher order procedure template
+higher order procedure sum template
+anonymous procedure
+what define does more than anonymous procedure
+local variables can be created in multiple ways
+Explanation Higher order procedure procedure manipulating another procedure
+Goal higher order procedure Abstract: think about the pattern instead of the specifics.
+Higher order procedure template (define (procedure-name formal-parameters) (if (end condition in terms of the arguments) finish do something with term and next  Higher order procedure sum template (define (sum term a next b) (if (&amp;gt; a b) 0 (+ (term a) (sum term (next a) next b))))  Anonymous procedure Procedure without a name (called lambda in Scheme).</description>
+    </item>
     
     <item>
       <title></title>
