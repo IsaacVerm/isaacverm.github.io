@@ -23,6 +23,16 @@
   </url>
   
   <url>
+    <loc>https://isaacverm.github.io/posts/most-common-data-manipulations-dplyr-awk/</loc>
+    <lastmod>2019-10-04T14:51:44+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://isaacverm.github.io/posts/</loc>
+    <lastmod>2019-10-04T14:51:44+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://isaacverm.github.io/observations/03-10-2019/</loc>
     <lastmod>2019-10-03T21:42:06+02:00</lastmod>
   </url>
@@ -179,11 +189,6 @@
   
   <url>
     <loc>https://isaacverm.github.io/posts/create-simplest-web-page/</loc>
-    <lastmod>2019-09-08T16:12:09+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://isaacverm.github.io/posts/</loc>
     <lastmod>2019-09-08T16:12:09+02:00</lastmod>
   </url>
   

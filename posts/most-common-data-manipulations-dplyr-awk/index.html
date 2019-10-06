@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Most common data manipulations implemented in Awk and dplyr" />
+<meta property="og:description" content="R cheatsheets
+Goal of this post We compare the most common data manipulations between dplyr and awk in terms of functionality.
+As explained perfectly in the tidyverse article there are 5 types of common data manipulations:
+ filter select mutate summarise arrange  I go over each of these manipulations and show using examples in dplyr and awk how to implement them.
+Some aspects of these data manipulations are not covered in this article:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/most-common-data-manipulations-dplyr-awk/" />
+<meta property="article:published_time" content="2019-10-04T14:51:44+02:00" />
+<meta property="article:modified_time" content="2019-10-04T14:51:44+02:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Most common data manipulations implemented in Awk and dplyr"/>
+<meta name="twitter:description" content="R cheatsheets
+Goal of this post We compare the most common data manipulations between dplyr and awk in terms of functionality.
+As explained perfectly in the tidyverse article there are 5 types of common data manipulations:
+ filter select mutate summarise arrange  I go over each of these manipulations and show using examples in dplyr and awk how to implement them.
+Some aspects of these data manipulations are not covered in this article:"/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Most common data manipulations implemented in Awk and dplyr</h1>
+			<div class="meta">Posted at &mdash; Oct 4, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p><a href="https://rstudio.com/resources/cheatsheets/">R cheatsheets</a></p>
+
+<h2 id="goal-of-this-post">Goal of this post</h2>
+
+<p>We compare the <a href="https://dplyr.tidyverse.org/">most common data manipulations</a> between <code>dplyr</code> and <code>awk</code> in terms of functionality.</p>
+
+<p>As explained perfectly in the <a href="https://dplyr.tidyverse.org/">tidyverse article</a> there are 5 types of common data manipulations:</p>
+
+<ul>
+<li>filter</li>
+<li>select</li>
+<li>mutate</li>
+<li>summarise</li>
+<li>arrange</li>
+</ul>
+
+<p>I go over each of these manipulations and show using examples in <code>dplyr</code> and <code>awk</code> how to implement them.</p>
+
+<p>Some aspects of these data manipulations are not covered in this article:</p>
+
+<ul>
+<li>speed (the data we used was pretty small anyway so speed mattered little)</li>
+<li>reading the data</li>
+</ul>
+
+<h2 id="example-data">Example data</h2>
+
+<p>As an example I wanted to use a csv which wasn&rsquo;t too small. A csv because both <code>R</code> and <code>awk</code> are good at manipulating text, not too small so I could use some interesting examples instead of purely theoretical ones.</p>
+
+<p>In the end I chose to use the <a href="https://www.kaggle.com/paultimothymooney/denver-crime-data">Denver crime dataset</a>.</p>
+
+<h2 id="basic-explanation-of-awk-and-dplyr">Basic explanation of awk and dplyr</h2>
+
+<p>I&rsquo;ve got no intention to go over all the specifics of each but just want to outline the basic differences between using <code>awk</code> and <code>R</code>.</p>
+
+<h3 id="dplyr">dplyr</h3>
+
+<p><code>dplyr</code> is an R package based on a grammar of data manipulations. The grammar compromises several verbs (select, filter, &hellip;) which can be combined to solve most data issues. For ease of use these &ldquo;verbs&rdquo; can be piped (just as you would do in the command line).</p>
+
+<h3 id="awk">awk</h3>
+
+<p><code>awk</code> reads text files line by line. When a line matches one of the patterns, <code>awk</code> performs specified actions on that line. <code>awk</code>continues to process input lines in this way until it reaches the end of the input files. Each line is split into fields.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>The following versions were used:</p>
+
+<ul>
+<li>R: 3.6.1</li>
+<li>dplyr: 0.8.3</li>
+<li>awk: 20070501 (Mac version)</li>
+</ul>
+
+<p>R can be installed from the <a href="https://cran.r-project.org/">CRAN site</a>. After installing R you have to install the <code>tidyverse</code> packages by running the following in a R console:</p>
+
+<pre><code>install.packages(&quot;tidyverse&quot;)
+</code></pre>
+
+<p>For most Linux distributions <code>awk</code> is installed by default.</p>
+
+<h2 id="filter">Filter</h2>
+
+<p>Onto the data manipulations themselves now. Filtering means keeping only some records based on their values. Let&rsquo;s say we&rsquo;re interesting in <a href="https://www.reddit.com/r/AskAnAmerican/comments/4a9x3l/what_is_loitering_and_why_is_it_illegal/">loitering</a>.</p>
+
+<h3 id="dplyr-1">dplyr</h3>
+
+<pre><code>crimes %&gt;%
+  filter(OFFENSE_TYPE_ID == &quot;loitering&quot;)
+</code></pre>
+
+<h3 id="awk-1">awk</h3>
+
+<p><a href="https://www.tim-dennis.com/data/tech/2016/08/09/using-awk-filter-rows.html">awk</a> offers several options.</p>
+
+<h4 id="without-specifying-field">without specifying field</h4>
+
+<p>We could just use a regular expression and not specify the field. This works quite well if the value we want to filter on is unique among the whole dataset. For example if we filter on &lsquo;loitering&rsquo; it&rsquo;s not quite likely any of the other fields would have a value loitering as well (they&rsquo;re mostly offence codes and geographic data):</p>
+
+<pre><code>awk -F, '/loitering/' denver-crimes.csv
+</code></pre>
+
+<p>Notice a normal awk program consists of a series of pattern/action pairs called rules. In the example above only the pattern <code>/loitering/</code> is specified. If no action is specified the default action is to <a href="https://www.gnu.org/software/gawk/manual/gawk.html#Very-Simple">print the entire line</a>.</p>
+
+<h4 id="field-specific">field-specific</h4>
+
+<p>If we want to be more specific we could use the <a href="https://www.gnu.org/software/gawk/manual/gawk.html#Regexp-Usage">regular expression operator ~</a> only on the field containing the OFFENSE_TYPE_ID.</p>
+
+<p>First thing do is find out the field index of the OFFENSE_TYPE_ID field. An easy way to this in bash without using awk (I slightly adapted this <a href="https://www.biostars.org/p/248049/">example</a>):</p>
+
+<pre><code>head -1 denver-crimes.csv | tr ',' '\n' | cat -n | grep &quot;OFFENSE_TYPE_ID&quot;
+</code></pre>
+
+<p>The command above has 4 steps:</p>
+
+<ul>
+<li>print the first line containing the field names (<code>head -1</code>)</li>
+<li>translate commas to newlines (<code>tr ',' '\n'</code>)</li>
+<li>print all lines (<code>cat</code>) with their line number (<code>-n</code>)</li>
+<li>search the line containing the field we want</li>
+</ul>
+
+<p>The translation from comma to newline is necessary to have multiple lines for <code>cat</code>. Since now we know the index of the OFFENSE_TYPE_ID we can be more specific with our regex:</p>
+
+<pre><code>awk -F, '$5~/loitering/' denver-crimes.csv
+</code></pre>
+
+<p>To make things more readable we could give the field index a name with a <a href="https://www.gnu.org/software/gawk/manual/gawk.html#Using-Variables">variable</a>. In practice you probably won&rsquo;t do it for throwaway programs.</p>
+
+<pre><code>awk -F, '$offence_type_id~/loitering/' offence_type_id=5 denver-crimes.csv
+</code></pre>
+
+<h2 id="select">Select</h2>
+
+<p>Selecting means you want to pick some fields. We want to select the OFFENSE_TYPE_ID and the NEIGHBORHOOD_ID to get a quick idea of what neighborhoods have what kind of crime.</p>
+
+<h3 id="dplyr-2">dplyr</h3>
+
+<pre><code>crimes %&gt;%
+  select(c(&quot;OFFENSE_TYPE_ID&quot;,&quot;NEIGHBORHOOD_ID&quot;))
+</code></pre>
+
+<h3 id="awk-2">awk</h3>
+
+<p>To find out what the field indices are we have to slightly adopt the command used above. Instead of <code>grep NEIGHBORHOOD_ID</code> at the end, we can use
+<code>grep 'NEIGHBORHOOD_ID\|OFFENSE_TYPE_ID'</code>. Note the single quotes and escaping of the |. Selecting the fields is as simple as printing them:</p>
+
+<pre><code>awk -F, '{print $5,$17}' denver-crimes.csv
+</code></pre>
+
+<p>On a side note, it&rsquo;s quite straightforward to combine this with the filtering we did before:</p>
+
+<pre><code>awk -F, '$5~/loitering/ { print $5,$17 }' denver-crimes.csv
+</code></pre>
+
+<h2 id="mutate">Mutate</h2>
+
+<p>Mutating is adding new fields which are functions of already existing fields. A lot of the fields in the example data are related to timestamps but since timestamps are often trouble I avoid them in this post. Working with dates would probably need a post on itself to cover that material thoroughly.</p>
+
+<p>As an alternative example I&rsquo;ll create a new field <code>meridiem</code> saying either if the crime occured before or after noon. The timestamps are formatted as <code>6/15/2016 11:31:00 PM</code> so we have to extract the last 2 characters of the timestamp.</p>
+
+<h3 id="dplyr-3">dplyr</h3>
+
+<pre><code>crimes %&gt;%
+  mutate(meridiem = str_sub(FIRST_OCCURRENCE_DATE, -2,-1))
+</code></pre>
+
+<h3 id="awk-3">awk</h3>
+
+<p>awk has a helper function called substr which does what we want.</p>
+
+<pre><code>awk -F, '{print substr($7,length($7)-2,length($7))}' denver-crimes.csv
+</code></pre>
+
+<p>There are <a href="https://unix.stackexchange.com/questions/163481/a-command-to-print-only-last-3-characters-of-a-string">plenty of other options</a> like using cut (a bit dangerous because based on bytes instead of characters) or grep with the -o flag (means it only returns you what matches).</p>
+
+<h2 id="summarise">summarise</h2>
+
+<p>Summarising is the practice of reducing multiple values to a single one. This is especially powerful in combination with grouping.</p>
+
+<h3 id="dplyr-4">dplyr</h3>
+
+<pre><code>crimes %&gt;%
+  group_by(OFFENSE_TYPE_ID) %&gt;%
+  summarise(total = n())
+</code></pre>
+
+<h3 id="awk-4">awk</h3>
+
+<p>Creating summaries in awk requires knowledge of:</p>
+
+<ul>
+<li><a href="https://www.gnu.org/software/gawk/manual/gawk.html#Array-Basics">associative arrays</a></li>
+<li><a href="https://www.gnu.org/software/gawk/manual/gawk.html#index-END-pattern">END special pattern</a></li>
+</ul>
+
+<p>What we want to do is:</p>
+
+<ul>
+<li>go over each line and create a summary (associative array)</li>
+<li>print the summary (END special pattern)</li>
+</ul>
+
+<p>As an example we&rsquo;ll calculate the number of crimes per crime category:</p>
+
+<pre><code> awk -F, '{summary[$5]++} END {for (offence in summary) {print offence,summary[offence]}}' denver-crimes.csv
+</code></pre>
+
+<p>We loop over each offence and add 1 to the array value for that offence if it occurs in the line. After our program has looped over all the lines of offences it prints the summary (the END pattern is executed after all the lines have been looped over).</p>
+
+<p>Note there&rsquo;s no need to say something like <code>summary[$5] = 0</code> in a BEGIN special pattern. The value of an array is instantiated by default at 0 which is exactly what we want for a total.</p>
+
+<h2 id="arrange">arrange</h2>
+
+<p>In the last example we created a summary but it&rsquo;s not ordered. The first offence found in the <code>denver-crimes.csv</code> will also be the first offence in the summary table. It&rsquo;s more interesting to have the same summary with the most frequent offences at the top.</p>
+
+<h3 id="dplyr-5">dplyr</h3>
+
+<pre><code>crimes %&gt;%
+  group_by(OFFENSE_TYPE_ID) %&gt;%
+  summarise(total = n()) %&gt;%
+  arrange(desc(total))
+</code></pre>
+
+<h3 id="awk-5">awk</h3>
+
+<p>Using just awk for this is a bit <a href="https://stackoverflow.com/questions/5342782/sort-associative-array-with-awk/29005234">convoluted</a> so we just stick to using <code>sort</code>:</p>
+
+<pre><code> awk -F, '{summary[$5]++} END {for (offence in summary) {print offence summary[offence]}}' denver-crimes.csv |
+</code></pre>
+
+<p>We have to print using printf to artificially insert a comma which can be used by sort. <code>-t</code> specifies the separator to be used (the comma we inserted with the <code>printf</code>), <code>-k</code> defines the sorting field, <code>-n</code> indicates we want to sort numerically and <code>-r</code> finally makes sure we sort descending instead of ascending.</p>
+
+<p>If we run the above with <code>head -5</code> to only get the top 5 of most frequent offences we get:</p>
+
+<pre><code>&quot;traffic-accident&quot;,94088
+&quot;traffic-accident-hit-and-run&quot;,36660
+&quot;traf-other&quot;,33403
+&quot;theft-items-from-vehicle&quot;,27987
+&quot;theft-of-motor-vehicle&quot;,27002
+</code></pre>
+
+<p>So most &ldquo;offences&rdquo; are actually traffic accidents. With a minimum of code we discovered something interesting.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p><code>awk</code> has its place in data manipulation. I hope I was able to show you can do most of the basic data analysis steps from the command line.</p>
+
+		</div>
+	</div>
+</body>
+</html>
