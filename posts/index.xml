@@ -17,8 +17,7 @@
       <pubDate>Fri, 04 Oct 2019 14:51:44 +0200</pubDate>
       
       <guid>https://isaacverm.github.io/posts/most-common-data-manipulations-dplyr-awk/</guid>
-      <description>R cheatsheets
-Goal of this post We compare the most common data manipulations between dplyr and awk in terms of functionality.
+      <description>Goal of this post We compare the most common data manipulations between dplyr and awk in terms of functionality.
 As explained perfectly in the tidyverse article there are 5 types of common data manipulations:
  filter select mutate summarise arrange  I go over each of these manipulations and show using examples in dplyr and awk how to implement them.
 Some aspects of these data manipulations are not covered in this article:</description>
