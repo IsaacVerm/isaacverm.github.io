@@ -6,10 +6,25 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Oct 2019 13:53:14 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2019 23:21:22 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/15-10-2019/</link>
+      <pubDate>Tue, 15 Oct 2019 23:21:22 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/15-10-2019/</guid>
+      <description>How the hell can a person
+go to work in the morning
+and come home in the evening
+and have nothing to say.
+  Goe poeier!
+но время и случай для всех их.
+Экклезиаст, глава 9, стих 11    </description>
+    </item>
     
     <item>
       <title>Creating a simple CLI with Click to learn Russian (part 1)</title>
