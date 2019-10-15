@@ -6,10 +6,20 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Oct 2019 23:02:15 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2019 13:53:14 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Creating a simple CLI with Click to learn Russian (part 1)</title>
+      <link>https://isaacverm.github.io/posts/cli-russian/</link>
+      <pubDate>Tue, 15 Oct 2019 13:53:14 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/cli-russian/</guid>
+      <description>Goal Unix philosophy In line with the Unix philosophy I wanted to build a small system which is as user-friendly as possible (even though I might be the only user). I chose a system which would help me with a personal goal namely learning Russian.
+Learning Russian Recently I scraped example phrases for the most common Russian words. Based on Zipf&amp;rsquo;s law it makes sense to really focus on the most common words since the frequency of any word is inversely proportional to its rank in the frequency table.</description>
+    </item>
     
     <item>
       <title></title>
