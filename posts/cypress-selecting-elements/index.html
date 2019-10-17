@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Cypress commands: selecting elements" />
+<meta property="og:description" content="In this post and the following one I&rsquo;ll go over the most basic Cypress commands which are:
+ selecting elements act on these elements  Selections are discussed in this post, I keep the action part for the next post.
+Examples are based on the Cypress kitchen sink example site(often slightly modified to make the point more clear in context of this post). This example app covers all existing Cypress commands." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/cypress-selecting-elements/" />
+<meta property="article:published_time" content="2019-10-17T09:38:59+02:00" />
+<meta property="article:modified_time" content="2019-10-17T09:38:59+02:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Cypress commands: selecting elements"/>
+<meta name="twitter:description" content="In this post and the following one I&rsquo;ll go over the most basic Cypress commands which are:
+ selecting elements act on these elements  Selections are discussed in this post, I keep the action part for the next post.
+Examples are based on the Cypress kitchen sink example site(often slightly modified to make the point more clear in context of this post). This example app covers all existing Cypress commands."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Cypress commands: selecting elements</h1>
+			<div class="meta">Posted at &mdash; Oct 17, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p>In this post and the following one I&rsquo;ll go over the most basic Cypress commands which are:</p>
+
+<ul>
+<li>selecting elements</li>
+<li>act on these elements</li>
+</ul>
+
+<p>Selections are discussed in this post, I keep the action part for the next post.</p>
+
+<p>Examples are based on the <a href="https://github.com/cypress-io/cypress-example-kitchensink">Cypress kitchen sink example</a> site(often slightly modified to make the point more clear in context of this post). This example app covers all existing Cypress commands.</p>
+
+<p>Why start a series of testing articles with an article about an E2E testing framework? Isn&rsquo;t that completely against <a href="https://martinfowler.com/articles/practical-test-pyramid.html#TheImportanceOftestAutomation">the logic of the test pyramid</a> where you&rsquo;d try to have as many unit tests as possible and try to limit the number of E2E tests? As stated by Martin Fowler:</p>
+
+<p><em>Write lots of small and fast unit tests. Write some more coarse-grained tests and very few high-level tests that test your application from end to end.</em></p>
+
+<p>However, that&rsquo;s only one point of view. Another strategy could be to do the <a href="https://www.cypress.io/blog/2019/10/10/guest-post-new-to-front-end-testing-start-from-the-top-of-the-pyramid/">exact opposite</a>. Advantages of this strategy are:</p>
+
+<ul>
+<li>you use a browser just like a user would</li>
+<li>your tests go through your app exactly as how a user would go through it</li>
+<li>it&rsquo;s easy cover a large part of the app with a limited number of tests</li>
+</ul>
+
+<p>This post states nothing shocking but:</p>
+
+<ul>
+<li>it gave me a chance to go a bit more in depth as to how the Cypress basics work</li>
+<li>it&rsquo;s kind of a memory aid to myself</li>
+<li>links the Cypress documentation with some Devtools and CSS selection basics</li>
+</ul>
+
+<h2 id="querying">Querying</h2>
+
+<p>Querying in Cypress is either done based on:</p>
+
+<ul>
+<li>a css selector using <code>cy.get()</code></li>
+<li>text using <code>cy.contains()</code></li>
+</ul>
+
+<p>99% of the times you will limit yourself to css selectors. Text can change making tests brittle. The <code>cy.get()</code> command may seem very clear on the outside but has a lot of interesting features.</p>
+
+<h3 id="waiting">Waiting</h3>
+
+<p>One of the core features of Cypress is it waits for &ldquo;key moments&rdquo; of your application state to be reached. As long as these key moments have not been reached Cypress will <a href="https://docs.cypress.io/guides/overview/key-differences.html#Flake-resistant">keep waiting</a>. There no need for explicit waits which would make your tests flaky. How would you determine the correct waiting time anyway? Maybe the tests are ran on a slow machine, a slow network, &hellip;</p>
+
+<p>You can see how important this is by yourself. By default the timeout <code>cy.get()</code> uses is 4 seconds. If trying to run our tests without doing a <code>cy.visit()</code> first (so nothing is loaded) you&rsquo;ll notice the test won&rsquo;t fail immediately. It will keep on trying during the timeout period.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// cy.visit(&#39;http://localhost:8080/commands/querying&#39;)
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">cy</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;#query-btn&#39;</span>).<span style="color:#a6e22e">should</span>(<span style="color:#e6db74">&#39;contain&#39;</span>, <span style="color:#e6db74">&#39;Button&#39;</span>)
+</code></pre></div>
+
+<p><img src="/cypress-4s-get-timeout.png" alt="4s timeout" /></p>
+
+<p>And we can override the timeout to see the effect:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// cy.visit(&#39;http://localhost:8080/commands/querying&#39;)
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">cy</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;#query-btn&#39;</span>, {<span style="color:#a6e22e">timeout</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10000</span>}).<span style="color:#a6e22e">should</span>(<span style="color:#e6db74">&#39;contain&#39;</span>, <span style="color:#e6db74">&#39;Button&#39;</span>)
+</code></pre></div>
+
+<p><img src="/cypress-10s-get-timeout.png" alt="4s timeout" /></p>
+
+<p>Note as well the timeout we get isn&rsquo;t exactly 4 or 10 seconds but just a bit tiny bit more. This drives home another point: Cypress runs commands <strong>inside</strong> the browser meaning there&rsquo;s <a href="https://docs.cypress.io/guides/overview/key-differences.html#Flake-resistant">almost no lag</a>.</p>
+
+<p>Small note, <code>cy.get()</code> only checks the existence of a DOM element. This does not mean the element is rendered as you&rsquo;d expect it to with all CSS applied.</p>
+
+<h3 id="devtools">DevTools</h3>
+
+<p>Another interesting aspect of <code>get()</code> is it yields a jQuery object. A jQuery object is an <a href="https://stackoverflow.com/questions/6445180/what-is-a-jquery-object">array-like</a> object but not exactly an array. Methods which work fine on arrays won&rsquo;t work for these jQuery objects. The jQuery object contains a lot of useful information you can use to write better tests. You can see for yourself if you open the <a href="https://developers.google.com/web/tools/chrome-devtools/console/utilities">Chrome DevTools</a> and go to the Console tab. If you click on any <code>cy.get()</code> command, a small summary of the contents of the jQuery object will be printed to the console. We want to further investigate this element so let&rsquo;s give it a name:</p>
+
+<p><img src="/create-test-button-console.png" alt="Test button" /></p>
+
+<p>A reference of the syntax used in the DevTools console can be found <a href="https://developers.google.com/web/tools/chrome-devtools/console/utilities">here</a>. Pay attention, this is no <a href="https://api.jquery.com">jQuery syntax</a> so you can only run these DevTools command in DevTools itself.</p>
+
+<p>Since we now have a reference to our jQuery object we can start playing around with it. Most interesting are its attributes and the css applied. Getting these values is quite simple:</p>
+
+<p><img src="/get-attr-and-css-console.png" alt="Test button" /></p>
+
+<p>However, you can go further and modify these values yourself. This way you can do some manual exploratory testing within automated tests. It&rsquo;s like having a REPL with your whole browser evaluating. As an example let&rsquo;s say we want to be sure if the href value of a hyperlink element is changed you&rsquo;re directed to another url (bit contrived but that&rsquo;s besides the point).</p>
+
+<p><img src="/set-attr-console.png" alt="Test button" /></p>
+
+<h2 id="traversal">Traversal</h2>
+
+<p>In essence just knowing the <code>cy.get()</code> command is enough to cater to all your selection needs. However, Cypress provides certain helper traversal commands to make it easier to select elements. I&rsquo;ll go over the main traversal commands leaving some which are rarely used aside. If an appropriate css selector <a href="https://www.w3schools.com/css/css_combinators.asp">combinator</a> exists it&rsquo;s mentioned as well.</p>
+
+<h3 id="children">children()</h3>
+
+<p>Does exactly as it says, gives the children of the selected element.</p>
+
+<p>Its CSS selection equivalent is <code>&gt;</code> so those are the same:</p>
+
+<p><img src="/traversal-children.png" alt="Traversal children" /></p>
+
+<p>Interestingly enough, you can filter the children selected if you pass a selector to <code>children()</code> (for example if you want to select only active children elements).</p>
+
+<h3 id="closest">closest()</h3>
+
+<p>This command traverses up the DOM tree. It stops looking further the moment it finds its match (hence closest).</p>
+
+<p><img src="/closest-html-example.png" alt="Closest HTML example" /></p>
+
+<p>Going up from the span element there are 2 div elements. Since we use <code>closest()</code> we expect it to match with the div with class well and not the one with class col-xs-5.</p>
+
+<p><img src="/traversal-closest.png" alt="Traversal closest" /></p>
+
+<p>This command has no CSS selection equivalent.</p>
+
+<h3 id="eq">eq()</h3>
+
+<p>This command get an element at an index. Its CSS selection equivalent is <code>nth-child()</code>.</p>
+
+<p><img src="/traversal-eq.png" alt="Traversal eq" /></p>
+
+<p>Pay attention: the counting in Cypress and in the CSS selection differs by 1. <code>nth-child()</code> starts at 1, <code>eq() starts at 0</code>.</p>
+
+<h3 id="find">find()</h3>
+
+<p>This command get the descendants of a selector. The name is somewhat confusing since it doesn&rsquo;t refer to descendants at all. The CSS selection equivalent just uses a space.</p>
+
+<p><img src="/traversal-find.png" alt="Traversal find" /></p>
+
+<h3 id="next">next()</h3>
+
+<p><code>next()</code> get the immediate next sibling of each DOM element. It&rsquo;s quite helpful to make assertions on several elements by just going through them one by one. CSS selection uses <code>+</code> to accomplish this. There are quite a lot of variations on this command (<code>nextAll()</code>, <code>nextUntil()</code>, &hellip;).</p>
+
+<p><img src="/traversal-next.png" alt="Traversal next" /></p>
+
+<p>As you can see for each extra call to next you have to add an element to the CSS selector. Conceptually a call to <code>next()</code> is more obvious here.</p>
+
+<h3 id="parent">parent()</h3>
+
+<p>It&rsquo;s <a href="(https://stackoverflow.com/questions/22811495/is-parent-selector-available-in-css4)">not possible</a> using only CSS4 selectors to get the parent of an element. The only possibility is using the Cypress <code>parent()</code> command.</p>
+
+<p><img src="/traversal-parent.png" alt="Traversal parent" /></p>
+
+<h3 id="siblings">siblings()</h3>
+
+<p>The last command to be discussed here is <code>siblings()</code>. Its CSS selector is <code>~</code>.</p>
+
+<p><img src="/traversal-siblings.png" alt="Traversal siblings" /></p>
+
+<p>Quite useful in a lot of cases and a straightforward command.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Selecting elements in Cypress is not too hard. You can get by on just using <code>cy.get()</code> and some basic knowledge of CSS selectors. However, it doesn&rsquo;t hurt to know the jQuery and DevTools APIs somewhat to make your life easier.</p>
+
+<p>If learning the traversal commands is worth the effort could be up for debate:</p>
+
+<ul>
+<li>in most cases using CSS selectors instead of traversal commands is easier
+
+<ul>
+<li>you only have to remember a single API (the CSS selectors one)</li>
+<li>most CSS combinators are shorter than their Cypress equivalent</li>
+</ul></li>
+<li>some selections like getting the parent are close to impossible with css selectors so you need a Cypress traversal command.</li>
+</ul>
+
+<p>But then again, if it&rsquo;s impossible with css selectors, maybe <a href="https://stackoverflow.com/questions/22811495/is-parent-selector-available-in-css4">you shouldn&rsquo;t do it</a>:</p>
+
+<p><em>Supporting it is giving people a whole lot of rope to hang themselves with.</em></p>
+
+<pre><code class="language-_">
+</code></pre>
+
+		</div>
+	</div>
+</body>
+</html>

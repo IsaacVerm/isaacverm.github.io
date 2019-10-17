@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Oct 2019 13:53:14 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 17 Oct 2019 09:38:59 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cypress commands: selecting elements</title>
+      <link>https://isaacverm.github.io/posts/cypress-selecting-elements/</link>
+      <pubDate>Thu, 17 Oct 2019 09:38:59 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/cypress-selecting-elements/</guid>
+      <description>In this post and the following one I&amp;rsquo;ll go over the most basic Cypress commands which are:
+ selecting elements act on these elements  Selections are discussed in this post, I keep the action part for the next post.
+Examples are based on the Cypress kitchen sink example site(often slightly modified to make the point more clear in context of this post). This example app covers all existing Cypress commands.</description>
+    </item>
     
     <item>
       <title>Creating a simple CLI with Click to learn Russian (part 1)</title>
