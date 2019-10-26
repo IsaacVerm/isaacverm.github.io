@@ -281,35 +281,6 @@ Telling tales of drunkenness and cruelty.
     </item>
     
     <item>
-      <title>Tips and Tricks</title>
-      <link>https://isaacverm.github.io/course-notes/tips-and-tricks/</link>
-      <pubDate>Thu, 03 Oct 2019 16:08:12 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/course-notes/tips-and-tricks/</guid>
-      <description>Debugging If you use R5RS as language, you can use the trace function to see the call stack.
-E.g.
-(#%require racket/trace) (define (sum-integers a b) (if (&amp;gt; a b) 0 (+ a (sum-integers (+ a 1) b)))) (trace sum-integers) (sum-integers 1 5)  Don&amp;rsquo;t forget to specify the require because [trace] is not included in R5D5 by default.</description>
-    </item>
-    
-    <item>
-      <title>Higher Order Procedures</title>
-      <link>https://isaacverm.github.io/course-notes/higher-order-procedures-definitions/</link>
-      <pubDate>Thu, 03 Oct 2019 15:28:01 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/course-notes/higher-order-procedures-definitions/</guid>
-      <description>List higher order procedure
-goal higher order procedure
-higher order procedure template
-higher order procedure sum template
-anonymous procedure
-what define does more than anonymous procedure
-local variables can be created in multiple ways
-Explanation Higher order procedure procedure manipulating another procedure
-Goal higher order procedure Abstract: think about the pattern instead of the specifics.
-Higher order procedure template (define (procedure-name formal-parameters) (if (end condition in terms of the arguments) finish do something with term and next  Higher order procedure sum template (define (sum term a next b) (if (&amp;gt; a b) 0 (+ (term a) (sum term (next a) next b))))  Anonymous procedure Procedure without a name (called lambda in Scheme).</description>
-    </item>
-    
-    <item>
       <title></title>
       <link>https://isaacverm.github.io/observations/02-10-2019/</link>
       <pubDate>Wed, 02 Oct 2019 21:56:11 +0200</pubDate>
@@ -357,46 +328,6 @@ Anyone can do any amount of work, provided it isn&amp;rsquo;t the work he is sup
     </item>
     
     <item>
-      <title>Exercise Newton Root</title>
-      <link>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-newton-root/</link>
-      <pubDate>Sun, 29 Sep 2019 20:43:53 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-newton-root/</guid>
-      <description>Difference between declarative (what is) programming and imperative (how to) programming. You can define the root mathematically (declarative) but that doesn&amp;rsquo;t help in finding it (imperative).</description>
-    </item>
-    
-    <item>
-      <title>Exercise 1.5</title>
-      <link>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.5/</link>
-      <pubDate>Sun, 29 Sep 2019 20:25:54 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.5/</guid>
-      <description>Explanation in blog post easier than the one the book.
-Evaluation:
- normal order  expand and reduce all functions first then evaluate parameters lazy  applicative order  evaluate and apply function first then formal parameters loop eager   So why does the test work? p will never stop executing when evaluating since there&amp;rsquo;s no stopping condition. So if we use the evaluate and apply model from applicative order evaluation the first thing that will be done is evaluating the p procedure thus hanging the process.</description>
-    </item>
-    
-    <item>
-      <title>Exercise 1.4</title>
-      <link>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.4/</link>
-      <pubDate>Sun, 29 Sep 2019 20:19:15 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.4/</guid>
-      <description>Always the same result except if b = 0 because &amp;ndash; = +.</description>
-    </item>
-    
-    <item>
-      <title>Exercise 1.3</title>
-      <link>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.3/</link>
-      <pubDate>Sat, 28 Sep 2019 19:31:21 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/exercises/structure-and-interpretation/exercise-1.3/</guid>
-      <description>concepts used  procedure definition conditional expression  explanation concepts procedure definition Abstraction by which a compound operation can be given a name and then referred to as a unit.
-General form:
-(define (&amp;lt;name&amp;gt; &amp;lt;formal parameters&amp;gt;) &amp;lt;body&amp;gt;)   name (symbol to be associated with the procedure definition in the environment) formal parameters (names used within the body of the procedure to refer to the corresponding arguments of the procedure) body (expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied)  conditional expression Consists of clauses which are pairs of predicates and consequent expressions.</description>
-    </item>
-    
-    <item>
       <title></title>
       <link>https://isaacverm.github.io/observations/28-09-2019/</link>
       <pubDate>Sat, 28 Sep 2019 15:11:16 +0200</pubDate>
@@ -415,28 +346,6 @@ By default Lichess annotates your game with automated comments like blunder, mis
       <guid>https://isaacverm.github.io/observations/26-09-2019/</guid>
       <description>Yeah.
 Being in New York compounded a feeling I had been experiencing, of profound dissociation from my own life. I knew, as I wandered through museums with friends and video-chatted with Ian, that I needed to leave the tech industry. I was no longer high on the energy of being around people who so easily satisfied their desires––on the feeling that everything was just within reach. The industry’s hubris and naïveté were beginning to grate; I had moral, political, and personal misgivings about Silicon Valley’s accelerating colonization of art, work, everyday life.</description>
-    </item>
-    
-    <item>
-      <title>Building Abstractions With Procedures</title>
-      <link>https://isaacverm.github.io/course-notes/building-abstractions-with-procedures/</link>
-      <pubDate>Wed, 25 Sep 2019 21:48:04 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/course-notes/building-abstractions-with-procedures/</guid>
-      <description>process  manipulates data directed by rules (program)  interpreter carries out processes
-why study Lisp blurs distinction between procedures and data</description>
-    </item>
-    
-    <item>
-      <title>Elements of Programming</title>
-      <link>https://isaacverm.github.io/course-notes/elements-of-programming/</link>
-      <pubDate>Wed, 25 Sep 2019 21:40:27 +0200</pubDate>
-      
-      <guid>https://isaacverm.github.io/course-notes/elements-of-programming/</guid>
-      <description>elements in every language  primitive expressions combination abstraction  primitive expressions  most basic entities either  primitive procedures (e.g. +) primitive data (number)   combination build compound elements from simpler elements
-abstraction compound elements can be named and manipulated as units
-types of elements  procedures data  benefit prefix notation  arbitrary number of arguments nesting  repl read-evaluate-print-loop
-define in scheme variables have values</description>
     </item>
     
     <item>
