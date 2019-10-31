@@ -3,12 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://isaacverm.github.io/observations/30-10-2019/</loc>
-    <lastmod>2019-10-30T22:05:26+01:00</lastmod>
+    <loc>https://isaacverm.github.io/</loc>
+    <lastmod>2019-10-31T11:31:43+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://isaacverm.github.io/</loc>
+    <loc>https://isaacverm.github.io/posts/</loc>
+    <lastmod>2019-10-31T11:31:43+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://isaacverm.github.io/posts/reproducible-analysis-outline/</loc>
+    <lastmod>2019-10-31T11:31:43+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://isaacverm.github.io/observations/30-10-2019/</loc>
     <lastmod>2019-10-30T22:05:26+01:00</lastmod>
   </url>
   
@@ -39,11 +49,6 @@
   
   <url>
     <loc>https://isaacverm.github.io/posts/mps-commission-attendances/</loc>
-    <lastmod>2019-10-26T14:14:40+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://isaacverm.github.io/posts/</loc>
     <lastmod>2019-10-26T14:14:40+02:00</lastmod>
   </url>
   

@@ -6,10 +6,19 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Oct 2019 22:05:26 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 31 Oct 2019 11:31:43 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reproducible analysis: outline</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-outline/</link>
+      <pubDate>Thu, 31 Oct 2019 11:31:43 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-outline/</guid>
+      <description>Motivation Last analysis post I made I hit quite a few stumbling blocks making the analysis take longer than expected. When reflecting on why this was the case I realized I hadn&amp;rsquo;t taken reproducibility into account. I made the post in the span of a week and already I realized parts were not documented well enough, not tested well enough, code versions weren&amp;rsquo;t tracked as they should, &amp;hellip; All this can be put under the banner of reproducibility.</description>
+    </item>
     
     <item>
       <title></title>

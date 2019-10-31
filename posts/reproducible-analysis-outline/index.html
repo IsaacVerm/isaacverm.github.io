@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Reproducible analysis: outline" />
+<meta property="og:description" content="Motivation Last analysis post I made I hit quite a few stumbling blocks making the analysis take longer than expected. When reflecting on why this was the case I realized I hadn&rsquo;t taken reproducibility into account. I made the post in the span of a week and already I realized parts were not documented well enough, not tested well enough, code versions weren&rsquo;t tracked as they should, &hellip; All this can be put under the banner of reproducibility." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/reproducible-analysis-outline/" />
+<meta property="article:published_time" content="2019-10-31T11:31:43+01:00" />
+<meta property="article:modified_time" content="2019-10-31T11:31:43+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reproducible analysis: outline"/>
+<meta name="twitter:description" content="Motivation Last analysis post I made I hit quite a few stumbling blocks making the analysis take longer than expected. When reflecting on why this was the case I realized I hadn&rsquo;t taken reproducibility into account. I made the post in the span of a week and already I realized parts were not documented well enough, not tested well enough, code versions weren&rsquo;t tracked as they should, &hellip; All this can be put under the banner of reproducibility."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Reproducible analysis: outline</h1>
+			<div class="meta">Posted at &mdash; Oct 31, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="motivation">Motivation</h2>
+
+<p><a href="https://isaacverm.github.io/posts/mps-commission-attendances/">Last analysis post I made</a> I hit quite a few stumbling blocks making the analysis take longer than expected. When reflecting on why this was the case I realized I hadn&rsquo;t taken reproducibility into account. I made the post in the span of a week and already I realized parts were not documented well enough, not tested well enough, code versions weren&rsquo;t tracked as they should, &hellip; All this can be put under the banner of reproducibility.</p>
+
+<p>Of course, <a href="https://web.cs.dal.ca/~johnston/poetry/island.html">no man is an island</a>, and I wasn&rsquo;t the first one to confront these issues. Jon Zelner has an excellent post series on exactly <a href="http://www.jonzelner.net/statistics/make/docker/reproducibility/2016/05/31/reproducibility-pt-1/">this</a>. His starting point is a more scientific one than I wish to entertain but the practical elaboration is still very useful (and he has an inspiring writing style). My own series is inspired by his but differs in important aspects. I plan to take on more topics (at least something about testing and about packages seems essential) and offer more examples (if my acts match my ambition is to be seen).</p>
+
+<p>The end goal is to have full control over the analysis. Rerunning with different data, rerunning with different parameters, modifying whatever without having the feelings your hands are cut off because some decision down the line has locked you in. Anyone should be able to rerun the analysis without knowing every intricate detail of the analysis. The way to do it is to remove friction. Make it as easy as possible (for yourself, for anyone else) to do things. Automation can have an added value if implemented from the beginning of your analysis. A good workflow is the basis of everything else.</p>
+
+<h2 id="code">Code</h2>
+
+<p>The basic analysis will be done in R (since I&rsquo;m most familiar with the <code>tidyverse</code>) but for any other topics I use whatever suits the needs at that moment.</p>
+
+<p>Code can be found in <a href="https://github.com/IsaacVerm/reproducible-analysis">this GitHub repository</a>.</p>
+
+<h2 id="example">Example</h2>
+
+<h3 id="function-for-each-step">function for each step</h3>
+
+<p>The basic example used has a function for <a href="https://r4ds.had.co.nz/explore-intro.html">each step in the data analysis cycle</a>. So in total there are 6 steps:</p>
+
+<ul>
+<li>import</li>
+<li>tidy</li>
+<li>transform</li>
+<li>visualise</li>
+<li>model</li>
+<li>communicate</li>
+</ul>
+
+<p>Some steps deserve some extra explanation. Tidying and transforming are distinct steps. Tidying means you put your data in tidy format. Any data obeying the following rules is considered tidy:</p>
+
+<ul>
+<li>each variable is a column</li>
+<li>each observation is a row</li>
+<li>each value is a cell</li>
+</ul>
+
+<p>Sounds abstract but the <a href="https://r4ds.had.co.nz/tidy-data.html#tidy-data-1">examples in the R for Data Science</a> book make clear how data can be (mis)formatted in lots of ways.</p>
+
+<p>Transforming on the other hand means manipulating the data until it suits your needs. You add columns, rename columns, sort records, &hellip; Communicating means creating a report. This as well can be automated (using <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a> which will be covered in one of the posts later on).</p>
+
+<h3 id="built-in-dataset">built-in dataset</h3>
+
+<p>To not overcomplicate things I decided to work with one of the <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html">R built-in datasets</a>. No package has to be loaded to have access to this data. Didn&rsquo;t want to go for a dataset too classic like <code>Titanic</code> so instead opted for the <code>nottem</code> <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/nottem.html">dataset</a>. This dataset contains the average air temperature at Nottingham from 1920-1939. I opted for a dataset which has a few variables but not too many (in this case month, year and temperature). Also the dataset is not tidy by default: the rows are the years and the columns are the months.</p>
+
+<h2 id="topics-covered">Topics covered</h2>
+
+<ul>
+<li>testing</li>
+<li>documentation</li>
+<li>package development</li>
+<li>literate programming</li>
+<li>command line</li>
+<li>orchestrating</li>
+<li>environment</li>
+<li>version control</li>
+<li>continuous integration</li>
+</ul>
+
+<p>Not sure I&rsquo;ll be able to cover all these topics but the order above is roughly the order in which I plan to tackle each topic. After explaining the basic example the first topic is testing. Before we do all kinds of black magic with the code it makes sense to see if it actually does what it has to do (even though the example is extremely simple). Documentation goes hand in hand with testing (because tests are in way just a type of documentation) so will be covered directly afterwards.</p>
+
+<p>After that package development has absolute priority since it impacts all later choices (folder structure, integration with tests, &hellip;). Then it&rsquo;s on to the command line. This is a necessary zwischenzug to be able to continue with the orchestration part (since you need something to well&hellip; orchestrate). The literature programming part following explains how to report.</p>
+
+<p>Now it&rsquo;s onto more technical stuff with the trinity of environment, version control and continuous integration. Environment is all about getting the right versions of the software we use, version control helps us keep track of changes and continuous integration means previous parts like testing are executed automatically regularly.</p>
+
+<p>So we end up with 9 topics which can be divided in 3 main parts:</p>
+
+<ul>
+<li>a basic program
+
+<ul>
+<li>testing</li>
+<li>documentation</li>
+<li>package development</li>
+<li>literate programming</li>
+</ul></li>
+<li>handling complexity
+
+<ul>
+<li>command line</li>
+<li>orchestrating</li>
+</ul></li>
+<li>consistency
+
+<ul>
+<li>environment</li>
+<li>version control</li>
+<li>continuous integration</li>
+</ul></li>
+</ul>
+
+<p>It&rsquo;s clear the code will be refactored multiple times. I can almost guarantee following the posts chronologically won&rsquo;t be the fastest way to solve these issues. Pedagogical concerns trump efficiency here.</p>
+
+<p>The exact contents of some of these topics might still be unclear but things will get more clear in the posts themselves. In addition, although I have a vague idea what a topic should cover, I&rsquo;d like to reserve the space for myself to improvise.</p>
+
+<h2 id="structure-topic">Structure topic</h2>
+
+<p>Since I noticed writing a post can drag on if not limiting yourself in any way I decided to use a more or less fixed template for each post in this series:</p>
+
+<ul>
+<li>explanation issue at hand</li>
+<li>solution chosen (and possible alternatives if any)</li>
+<li>general explanation of the solution</li>
+<li>examples</li>
+</ul>
+
+<p>I put it as more or less fixed because in the end it&rsquo;s the subject itself dictating what&rsquo;s needed. But in any case I&rsquo;ll try to use this structure as a guideline. I&rsquo;d like the posts to be short but also exhausitive. I&rsquo;ll try to justify whatever I do as much as possible backing it up with references to manuals, official documentation, other tutorials, &hellip;</p>
+
+<h2 id="what-s-next">What&rsquo;s next</h2>
+
+<p>A general plan is made, now it&rsquo;s time to make it a reality. Next post will be explaining the example used.</p>
+
+		</div>
+	</div>
+</body>
+</html>
