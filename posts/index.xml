@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Oct 2019 09:38:59 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 26 Oct 2019 14:14:40 +0200</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MPs commission attendances</title>
+      <link>https://isaacverm.github.io/posts/mps-commission-attendances/</link>
+      <pubDate>Sat, 26 Oct 2019 14:14:40 +0200</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/mps-commission-attendances/</guid>
+      <description>Scope of this post Article which inspired this post I was triggered to write this post because of an interesting article in De Tijd from some years ago which I recently stumbled upon again. Maarten Lambrechts investigated which members of the Flemish parliament are industrious and which are&amp;hellip; less so.
+Focus on commission attendances To make this more concrete he looked at the number of initiatives and questions by parliamentarians in the Flemish Parliament.</description>
+    </item>
     
     <item>
       <title>Cypress commands: selecting elements</title>

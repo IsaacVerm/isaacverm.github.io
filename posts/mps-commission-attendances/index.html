@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="MPs commission attendances" />
+<meta property="og:description" content="Scope of this post Article which inspired this post I was triggered to write this post because of an interesting article in De Tijd from some years ago which I recently stumbled upon again. Maarten Lambrechts investigated which members of the Flemish parliament are industrious and which are&hellip; less so.
+Focus on commission attendances To make this more concrete he looked at the number of initiatives and questions by parliamentarians in the Flemish Parliament." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/mps-commission-attendances/" />
+<meta property="article:published_time" content="2019-10-26T14:14:40+02:00" />
+<meta property="article:modified_time" content="2019-10-26T14:14:40+02:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MPs commission attendances"/>
+<meta name="twitter:description" content="Scope of this post Article which inspired this post I was triggered to write this post because of an interesting article in De Tijd from some years ago which I recently stumbled upon again. Maarten Lambrechts investigated which members of the Flemish parliament are industrious and which are&hellip; less so.
+Focus on commission attendances To make this more concrete he looked at the number of initiatives and questions by parliamentarians in the Flemish Parliament."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">MPs commission attendances</h1>
+			<div class="meta">Posted at &mdash; Oct 26, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="scope-of-this-post">Scope of this post</h2>
+
+<h3 id="article-which-inspired-this-post">Article which inspired this post</h3>
+
+<p>I was triggered to write this post because of an <a href="https://multimedia.tijd.be/vlaamsparlement/">interesting article</a> in <em>De Tijd</em> from some years ago which I recently stumbled upon again. <a href="http://www.maartenlambrechts.com/](https://multimedia.tijd.be/vlaamsparlement/)">Maarten Lambrechts</a> investigated which members of the Flemish parliament are industrious and which are&hellip; less so.</p>
+
+<h3 id="focus-on-commission-attendances">Focus on commission attendances</h3>
+
+<p>To make this more concrete he looked at the number of initiatives and questions by parliamentarians in the Flemish Parliament. Based on this he was able to divide politicians in several categories according to their productivity. However I chose to approach the question of politician productivity from another angle. Instead of focusing on questions and initiatives I chose to focus on the commission attendances by MPs. On the one hand I chose to focus on attendances since it&rsquo;s a very binary variable (you&rsquo;re either there or you&rsquo;re not), on the other hand I chose to limit myself to the commission meetings. A large chunk of parliamentary work is done in the commissions which mostly remains invisible to the public.</p>
+
+<h2 id="why-focus-on-attendances">Why focus on attendances?</h2>
+
+<p>Originally I started off thinking to replicate the analysis exactly as it was done in the article in <em>De Tijd</em>. I was pleased to see an <a href="http://www.maartenlambrechts.com/2016/10/03/how-i-built-a-scraper-to-measure-activity-of-mps.html">accompanying article</a> exists explaining the process of making the article. This way I learned the Flemish parliament has its <a href="http://ws.vlpar.be/e/opendata/api">own API</a> in the spirit of open data. Unfortunately using this API turned out to be harder than expected.</p>
+
+<h3 id="flemish-parliament-api-is-hard-to-use">Flemish parliament API is hard to use</h3>
+
+<p>Using the API was harder than expected because there&rsquo;s no obvious way to connect a member of parliament with their work. There are several ways to make the connection but none of them was satisfactory. This part of the post focuses on the inner workings of the API of the Flemish parliament. Feel free to skip this section if you&rsquo;re only interested in the results and not the process of making this post.</p>
+
+<h4 id="translate-original-ui-scraping-process-to-api">translate original UI scraping process to API</h4>
+
+<p>My first idea was to use the same process <a href="http://www.maartenlambrechts.com/2016/10/03/how-i-built-a-scraper-to-measure-activity-of-mps.html">as Maarten Lambrechts did</a> but then using the API instead of <a href="https://en.wikipedia.org/wiki/Web_scraping">scraping</a>. This involves the following steps:</p>
+
+<ol>
+<li>get all the MPs</li>
+<li>get their details</li>
+<li>extract questions and initiatives</li>
+</ol>
+
+<p>The first 2 steps are easy (using the <code>/vv/op-datum</code> and <code>/vv/{persoonId}</code> endpoints). Unfortunately the MP details do not contain anything about questions and initiatives. Most of the fields aren&rsquo;t too interesting for analysis (honours, if MP is also senator, &hellip;) or are interesting but difficult to parse (previous professions, other mandates, &hellip;).</p>
+
+<p>We get some attendance details but they&rsquo;re too general to do any useful analysis with:</p>
+
+<pre><code>&quot;aanwezigheden-huidige-legislatuur&quot;: {
+        &quot;commissie-aanw&quot;: [],
+        &quot;plenaire-aanw&quot;: {
+            &quot;aanwezig&quot;: 1,
+            &quot;afwezig&quot;: 1
+        }
+    }
+</code></pre>
+
+<h4 id="commissions-as-missing-link">commissions as missing link</h4>
+
+<p>So sadly there&rsquo;s no straight link between the MP on the one hand and questions and initiatives on the other. However, I thought there might be a missing link between the two. The API provides all commission reports using <code>/comm/{commId}/verslagen</code>. Each report gives some info about questions and initiatives. Unfortunately there&rsquo;s no specific encoding of who asked the question or started the initiative as shown in the example of an initiative below:</p>
+
+<pre><code>&quot;parl-initiatief&quot;: {
+                &quot;contacttype&quot;: [
+                    {
+                        &quot;beschrijving&quot;: &quot;Spreker&quot;,
+                        &quot;contact&quot;: []
+                    },
+                    {
+                        &quot;beschrijving&quot;: &quot;Verslaggever&quot;,
+                        &quot;contact&quot;: []
+                    }
+                ],
+                &quot;titel&quot;: &quot;Voorstel van resolutie van de heren Wouter Vanbesien en Björn Rzoska betreffende de organisatie van een hoorzitting met het middenveld over zijn visie op het beleid voor de komende zittingsperiode en over de gevraagde besparingsinspanningen.  Verslag namens de Commissie voor Algemeen Beleid, Financiën en Begroting uitgebracht door de heer Bart Tommelein&quot;
+        },
+</code></pre>
+
+<p>The MPs responsible for the initiative (Wouter Vanbesien and Björn Rzoska) are mentioned in the title field. This is not always the case so it&rsquo;s impossible to rely on this. In addition, to parse this info would take quite some natural language magic. And even if all this would go well the results would never be totally reliable.</p>
+
+<p>Maarten Lambrechts in the end chose to just scrape the site of the parliament instead of using the API directly. However, I wanted to focus less on data collection and more on analysis in this article. Turning my mind to scraping would have meant doing a lot of (necessary) plumbing which I didn&rsquo;t feel like.</p>
+
+<h3 id="what-s-an-initiatives-what-s-a-question">What&rsquo;s an initiatives? What&rsquo;s a question?</h3>
+
+<p>Next to the data being hard to obtain through the API, there was a more fundamental reason I chose to move away from focusing on the questions and initiatives and focus on attendances instead. Another stumbling block turned out to be the concepts of questions, interpellations, interventions, themselves&hellip; Parliamentary work is <a href="https://www.vlaamsparlement.be/over-het-vlaams-parlement/begrippenlijst">not straightforward</a>. It feels like aggregating all this work into a single variable of &ldquo;number of questions and initiatives&rdquo; does not do justice to the subject.</p>
+
+<p>So I was at a crossroads here: either I can embrace the full complexity of the topic or I can find another angle. If I go for the complexity route I have to take all the different kinds of parliamentary work (motions, oral questions, interpellations, resolutions, debates, written questions, &hellip;) into account which would widely expand the scope of this article. Instead I chose to focus on simplicity and stick to attendances.</p>
+
+<h2 id="why-focus-on-commissions">Why focus on commissions?</h2>
+
+<p>The above explains why to focus on attendances. But why focus on the commission work and not the plenary? While researching this topic I felt the work done in commission doesn&rsquo;t get the attention it deserves. Most of the actual parliamentary work is not done in the plenary session (where all the members of parliament are present) but in the commissions beforehand. A commission is a group of members of parliaments specialized in a certain subject (finance, education, &hellip;). So if you&rsquo;re not present in a commission, you&rsquo;re not there the moment the real work is done.</p>
+
+<h2 id="getting-the-data">Getting the data</h2>
+
+<p>To do a thorough analysis I needed these data sources:</p>
+
+<ul>
+<li>the commission meeting attendances</li>
+<li>a list of commission members</li>
+<li>election results</li>
+</ul>
+
+<p>The third date source, <a href="https://vlaanderenkiest.be/verkiezingen2019/#/parlement/02000/verkozenen">election results</a>, was used to check if being a productive parliamentarian actually is rewarded by votes.</p>
+
+<h3 id="commission-meeting-attendances">commission meeting attendances</h3>
+
+<p>For the scope of this post data for only the last legislature (2014-2019) seemed more than enough.</p>
+
+<p>To get the meeting notes we have to make calls to the API of the Flemish parliament:</p>
+
+<ul>
+<li>legislature (<code>/leg/alle</code>)
+
+<ul>
+<li>commission (<code>/comm/legislatuur</code>)</li>
+<li>meeting notes (<code>/verg/volledig/zoek</code>)</li>
+</ul></li>
+</ul>
+
+<p>The legislature call gives us the name of the last legislature, the commission call gives us the commission ids of the commission in that legislature and the last call gives us the meeting notes themselves.</p>
+
+<p>From the meeting notes themselves I got more fields than needed since there&rsquo;s no almost no extra effort in doing so. The following fields were extracted:</p>
+
+<ul>
+<li>persons present
+
+<ul>
+<li>first name</li>
+<li>last name</li>
+<li>person id</li>
+<li>party name</li>
+<li>party id</li>
+<li>gender</li>
+</ul></li>
+<li>meeting
+
+<ul>
+<li>meeting id</li>
+<li>commission name</li>
+<li>commission id</li>
+<li>meeting start timestamp</li>
+<li>meeting end timestamp</li>
+<li>meeting description</li>
+</ul></li>
+</ul>
+
+<p>The actual calls are divided in combinations of years and months (so January 2014 first, February 2014 second, and so on) in order not to overload the server. When trying to get all the meeting notes in a single call the server responds with a 500 HTTP status code meaning it could not handle the request.</p>
+
+<p>What you end up with is a csv with each row being a unique combination of MP and meeting:</p>
+
+<pre><code>person_id | meeting_id
+A         | X
+B         | X
+A         | Y
+B         | Y
+...
+</code></pre>
+
+<h3 id="list-of-commission-members">list of commission members</h3>
+
+<p>Call is made to <code>/comm/{commId}</code> to get all the members in a commission. Acting members are not included.</p>
+
+<h3 id="election-results">election results</h3>
+
+<p>In this case I didn&rsquo;t use the API but instead scraped the data like you would using a browser with <code>puppeteer</code>.</p>
+
+<h2 id="analysis">Analysis</h2>
+
+<h3 id="most-productive-members-of-parliament">Most productive members of parliament</h3>
+
+<p>First I have a look at what members of parliaments are the most productive by sorting them according to their presences. It goes beyond the raw number of presences in two ways:</p>
+
+<ul>
+<li>only obligatory presences are counted</li>
+<li>only members who completed the entire legislature (2014-2019) are retained</li>
+</ul>
+
+<p>Because the official list of commission members is taken into account, only presences of official members of a commission are counted. Let&rsquo;s say politician A is a member of commission X but not Y. In case he goes to a meeting of commission Y this won&rsquo;t be counted as a presence.</p>
+
+<p>Ended up with these 20 most productive members of parliament (with the party they belong to):</p>
+
+<p><img src="/top-20-most-presences.png" alt="top 20 most presences" /></p>
+
+<p>The most active members seem to be CD&amp;V party members (5 CD&amp;V MPs in the top 10 of most active parliamenterians). Nonetheless, the number 1 spot is taken by Bart Caron of Groen with about 600 presences blowing everyone else out of the water.</p>
+
+<p>The same graph but for the least active members (who still were present in the entire legislature) paints a different picture:</p>
+
+<p><img src="/top-20-least-presences.png" alt="top 20 least presences" /></p>
+
+<p>Notice the spike for Hermes Sanctorum (striking name). He left Groen in 2016 over a <a href="https://www.knack.be/nieuws/belgie/beste-hermes-sanctorum-mijn-sympathie-gaat-niet-uit-naar-je-ideologie-maar-naar-je-rechtlijnigheid/article-opinion-750903.html?cookie_check=1572513133">disagreement around animal rights</a>. This messes somewhat with the sorting in descending order.</p>
+
+<p>The MP with the least number of presences is Christian Van Eycken. Beginning of 2016 an <a href="https://en.wikipedia.org/wiki/Christian_Van_Eyken">arrest warrant</a> was issued against him for murder. Because of procedural reasons he was released and somehow he kept attending commission meetings (I checked!). He was officialy found guilty in September 2019 which is after the end of the last legislature.</p>
+
+<p>Based on the above there seems to be a difference in the number of presences between parties. Let&rsquo;s plot the average number of presences by party:</p>
+
+<p><img src="/avg-presences-by-party.png" alt="average number of presences by party" /></p>
+
+<p>UF is very low because there&rsquo;s only a single member, Christian Van Eycken, and his story has already been explained. What&rsquo;s more striking is the low number of presences by Vlaams Belang. On closer inspection it makes more sense. Turns out there&rsquo;s only a single Vlaams Belang commission member in our dataset (<a href="https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/chris-janssens#parlementair">Chris Janssens</a>).</p>
+
+<h3 id="correlation-productivity-and-electoral-success">Correlation productivity and electoral success</h3>
+
+<p>Looking at the data on presences is quite interesting in itself but does it mean anything? Is parliamentary work also rewarded by the voter? Election results are publicly available so we can correlate productivity and electoral success. Election results used are those of the 2019 election.</p>
+
+<p>On a sidenote, only half of the members could be assigned a vote because:</p>
+
+<ul>
+<li>some members of parliament in legislature 2014-2019 didn&rsquo;t run for election in 2019</li>
+<li>names might be spelled differently in different datasets (making joins difficult)</li>
+</ul>
+
+<p>The strategy used was to put names in lowercase. For example &ldquo;De Meyer Jos&rdquo; and &ldquo;DE MEYER Jos&rdquo; wouldn&rsquo;t match but de meyer jos would.</p>
+
+<p>Let&rsquo;s start off with plotting the number of presences against the number of votes. In contrast to the productivity part above where we filtered to keep only those MPs which completed an entire legislature, in this electoral part we keep all MPs.</p>
+
+<p><img src="/presences-vs-votes.png" alt="presences vs votes" /></p>
+
+<p>It&rsquo;s hard to see any kind of relationship between presences in commissions and votes. This kind of means this analysis is rather without object. I look at the presences but apparently it has no impact at all on voter behavior.</p>
+
+<p>Still, there are loose ends. For example, you can notice there are a few MPs getting votes without presences. How&rsquo;s that possible? I did some digging and there are different reasons for this:</p>
+
+<ul>
+<li>politicians like <a href="https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/guy-dhaeseleer#taken">Guy D&rsquo;haeseleer</a> only just joined the parliament.</li>
+<li>were minister in government (<a href="https://www.vlaamsparlement.be/vlaamse-volksvertegenwoordigers/joke-schauvliege">Joke Schauvliege</a>, after <a href="https://www.nieuwsblad.be/cnt/dmf20190205_04154991">resigning</a></li>
+<li>temporary replacements like <a href="https://nl.wikipedia.org/wiki/Jamila_Hamddan_Lachkar">Jamila Hamddan Lachkar</a></li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>Getting the data was way more difficult than expected (the Flemish parliament API could be made more user-friendly). Regarding the analysis itself, had a good look at which members of parliaments are the most and least productive. But in the end this matters little since voters don&rsquo;t seem to take this into account.</p>
+
+<h2 id="code">Code</h2>
+
+<p>Code used in this post can be found on my <a href="https://github.com/IsaacVerm/mps-activity">GitHub account</a>.</p>
+
+		</div>
+	</div>
+</body>
+</html>
