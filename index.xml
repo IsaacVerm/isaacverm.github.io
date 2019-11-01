@@ -25,6 +25,16 @@ He spent much of the money he inherited during and after his education on womani
     </item>
     
     <item>
+      <title>Reproducible analysis: example</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-example/</link>
+      <pubDate>Thu, 31 Oct 2019 15:20:58 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-example/</guid>
+      <description>Stating the obvious here, but before we can start playing around with the code we need code to play around with. As said in last post each step in the data analysis cycle will have its own function as an example.
+Concerns about how to structure this code are not relevant at the moment. First things first so we throw all the functions together in a file called analysis.R. This file is also used to &amp;ldquo;orchestrate&amp;rdquo; (between quotation marks since orchestration in this case is just running each function after another).</description>
+    </item>
+    
+    <item>
       <title>Reproducible analysis: outline</title>
       <link>https://isaacverm.github.io/posts/reproducible-analysis-outline/</link>
       <pubDate>Thu, 31 Oct 2019 11:31:43 +0100</pubDate>
