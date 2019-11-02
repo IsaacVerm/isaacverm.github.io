@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Oct 2019 15:20:58 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 02 Nov 2019 11:12:48 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reproducible analysis: package development</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-package-dev/</link>
+      <pubDate>Sat, 02 Nov 2019 11:12:48 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-package-dev/</guid>
+      <description>Issue Packages are used to share your R code with others. Why then should this be the first topic tackled? Couldn&amp;rsquo;t we make our code shareable after we made something to actually share? Well, I actually don&amp;rsquo;t make the analysis a package mainly for sharing it (even though it&amp;rsquo;s nice to have). Packages also have the very nice side effect they enforce conventions. Other packages (e.g. testthat) build on these conventions.</description>
+    </item>
     
     <item>
       <title>Reproducible analysis: example</title>

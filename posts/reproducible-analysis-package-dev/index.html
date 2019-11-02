@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Reproducible analysis: package development" />
+<meta property="og:description" content="Issue Packages are used to share your R code with others. Why then should this be the first topic tackled? Couldn&rsquo;t we make our code shareable after we made something to actually share? Well, I actually don&rsquo;t make the analysis a package mainly for sharing it (even though it&rsquo;s nice to have). Packages also have the very nice side effect they enforce conventions. Other packages (e.g. testthat) build on these conventions." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/reproducible-analysis-package-dev/" />
+<meta property="article:published_time" content="2019-11-02T11:12:48+01:00" />
+<meta property="article:modified_time" content="2019-11-02T11:12:48+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reproducible analysis: package development"/>
+<meta name="twitter:description" content="Issue Packages are used to share your R code with others. Why then should this be the first topic tackled? Couldn&rsquo;t we make our code shareable after we made something to actually share? Well, I actually don&rsquo;t make the analysis a package mainly for sharing it (even though it&rsquo;s nice to have). Packages also have the very nice side effect they enforce conventions. Other packages (e.g. testthat) build on these conventions."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Reproducible analysis: package development</h1>
+			<div class="meta">Posted at &mdash; Nov 2, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="issue">Issue</h2>
+
+<p><a href="http://r-pkgs.had.co.nz/intro.html">Packages</a> are used to share your R code with others. Why then should this be the first topic tackled? Couldn&rsquo;t we make our code shareable after we made something to actually share? Well, I actually don&rsquo;t make the analysis a package mainly for sharing it (even though it&rsquo;s nice to have). Packages also have the very nice side effect they enforce conventions. Other packages (e.g. <code>testthat</code>) build on these conventions. If we adhere to these conventions we&rsquo;ll have way less issues interfacing with other people&rsquo;s code. Conventions of course have an impact on nearly everything so it makes sense to make our analysis a package from the start.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>In the R ecosystem <code>devtools</code> is the de facto standard to build packages. <code>devtools</code> helps with common tasks like scaffolding, running tests, setting up licenses, &hellip; I base myself mainly on the explanation in the R packages book. References to this book will popup later on as well when talking about tests or documentation.</p>
+
+<p>At the moment there are 2 slightly different versions of the R packages book available. The <a href="http://r-pkgs.had.co.nz/">first version</a> is a bit outdated (published in April 2015) focusing on an older version of <code>devtools</code>. The <a href="https://r-pkgs.org/index.html">second version</a> is based on <code>devtools 2.0.0</code>. It&rsquo;s more up to date but is still being written at the moment. I try as much as possible to work with the second edition. If some part is not yet available in the second edition I base myself on the first edition.</p>
+
+<h2 id="creating-package">Creating package</h2>
+
+<p>To use <code>devtools</code> to create a package we first have to load it in the console:</p>
+
+<pre><code>library(devtools)
+</code></pre>
+
+<p>Let&rsquo;s go to the root of our <code>reproducible-analysis</code> repository and run the following in the console to create a package:</p>
+
+<pre><code>create_package(&quot;reproseries&quot;)
+</code></pre>
+
+<p>This doesn&rsquo;t work:</p>
+
+<p><img src="/devtools-create-existing-folder-prompt.png" alt="devtools create package in existing folder" /></p>
+
+<p>At first I tried to come up with ways to turn existing code into an R package. I was sorely disappointed by the lack of documentation on that subject. However, this is probably a good thing since it forces you to start from a clean slate which is what I did. Now the <code>reproducible-analysis</code> repository is abandoned in favor of <code>reproseries</code>.</p>
+
+<p>Instead of running in the root of <code>reproducible-analysis</code> run this where you want to create the package:</p>
+
+<pre><code>create_package(&quot;reproseries&quot;)
+</code></pre>
+
+<p>Since there was no directory <code>reproseries</code> yet this works fine. Some files and directories are created automatically of which the most important are:</p>
+
+<ul>
+<li>R</li>
+<li>DESCRIPTION</li>
+<li>.gitignore</li>
+</ul>
+
+<p>The <code>R</code> directory contains the functions used in the analysis, the <code>DESCRIPTION</code> file provides metadata about the package: its title, a short description of what it does, its version, &hellip;</p>
+
+<p>Note the <code>.gitignore</code> file being there doesn&rsquo;t mean the package is a Git repository yet.</p>
+
+<h2 id="use-git">Use Git</h2>
+
+<p>To make our package Git compatible, run <code>use_git()</code> in the console. Git and version control will be covered in a later post but what this command does is:</p>
+
+<ul>
+<li>initialize repo</li>
+<li>add all files to staging</li>
+<li>commit them as first commit</li>
+</ul>
+
+<p>I could have done the same on the command line:</p>
+
+<ul>
+<li><code>git init</code></li>
+<li><code>git add -A</code></li>
+<li><code>git commit -m &quot;Initial commit&quot;</code></li>
+</ul>
+
+<p>However, why not use shortcuts if they&rsquo;re available and clear?</p>
+
+<h2 id="migrate-functions-to-r">Migrate functions to R</h2>
+
+<p><a href="https://isaacverm.github.io/posts/reproducible-analysis-example/">Last post</a> we already wrote some functions for our analysis. It&rsquo;s time to migrate these from the <code>reproducible-analysis</code> repository to the <code>reproseries</code> package.</p>
+
+<p>Now is a good moment to think about how to structure these functions. Maybe we want to group them by the data analysis step they belong to (<code>import-functions.R</code>, <code>tidy-functions.R</code>, &hellip;)? Or maybe group them by the data they manipulate (<code>temperatures.R</code>, <code>avg_temperatures.R</code>)? It&rsquo;s not a clear-cut choice but I noticed from experience consistency is key. Think about the grouping at the beginning of the project and stick with it not to confuse yourself. It&rsquo;s very tempting to half way start rearranging everything. Only do if it&rsquo;s really necesary and you know where you want to end up. In this case I think it makes a lot of sense to group by data analysis step.</p>
+
+<p>The philosophy of <code>devtools</code> is to let helper functions do the heavy lifting for you. So instead of copying the code ourselves to the <code>R</code> folder let&rsquo;s get some help from the <code>use_r</code> function. Running <code>use_r(&quot;tidy&quot;)</code> opens the <code>tidy.R</code> file in the <code>R</code> folder:</p>
+
+<p><img src="/tidy-function-in-r-folder.png" alt="tidy function in r folder" /></p>
+
+<p>You might notice the <code>tidyNottem</code> function uses two other functions, <code>tk_tbl</code> from the <code>timetk</code> package and <code>separate</code> from the <code>tidyr</code> package (part of <code>tidyverse</code>). In the original <code>analysis.R</code> script we defined these dependencies with <code>library</code>. However, you <a href="http://r-pkgs.had.co.nz/r.html">don&rsquo;t do it that way in a package</a>. Packages are loaded in two distinct steps:</p>
+
+<ul>
+<li>build</li>
+<li>the actual loading</li>
+</ul>
+
+<p>If you add a <code>library</code> call in your functions file this will only make the package available in the build phase but not in the actual load phase. To have the package available in the load phase you have to add it to the <code>DESCRIPTION</code> <a href="http://r-pkgs.had.co.nz/description.html#dependencies">file</a> with the <code>Imports</code> field:</p>
+
+<p><img src="/imports-description-example.png" alt="imports description example" /></p>
+
+<p>Note <code>magrittr</code> has to be imported to have access to the <code>%&gt;%</code> pipe operator. <a href="https://stackoverflow.com/questions/27947344/r-use-magrittr-pipe-operator-in-self-written-package">Modify</a> the <code>NAMESPACE</code> adding adding an <code>importFrom</code> call. I actually have no idea why it works with the <a href="http://r-pkgs.had.co.nz/namespace.html">NAMESPACE</a> but didn&rsquo;t by just adding it to <code>imports</code> in the <code>DESCRIPTION</code>. The <code>NAMESPACE</code> section of R packages clearly states:</p>
+
+<p><em>NAMESPACE also controls which external functions can be used by your package without having to use ::.</em></p>
+
+<p>Oh well.</p>
+
+<p><img src="/namespace-magrittr.png" alt="magrittr import exception" /></p>
+
+<p>Other fields like license I leave untouched at the moment. They&rsquo;re created by default but I don&rsquo;t mess with them if not needed. You can see keeping tracks of external packages used can quickly become a hassle. At the moment I still remember <code>separate</code> belongs to the <code>tidyverse</code> and <code>tk_tbl</code> is part of <code>timetk</code>. I&rsquo;m quite sure I won&rsquo;t remember this in a few days, I dread talking about what I&rsquo;ll remember about it in a few months. So it&rsquo;s best practice to add the package name to the function name like this:</p>
+
+<p><img src="/function-calls-with-double-semicolon-example.png" alt="function calls with double semicolon example" /></p>
+
+<p>This does get verbose. An alternative solution would be to use <a href="http://r-pkgs.had.co.nz/namespace.html#imports">namespace imports</a> but that would lead us too far. In general I don&rsquo;t mind it makes the function calls long. Try to look at it on the bright side. Since you lose a number of characters by default at the beginning you have to think harder about concise and practical function names.</p>
+
+<p>Now let&rsquo;s try if our tidy function does something by running this in the console:</p>
+
+<pre><code>library(devtools)
+load_all()
+tidyNottem(nottem)
+</code></pre>
+
+<p><code>load_all</code> is a <code>devtools</code> function making all functions in the package available for interactive use. <code>nottem</code> is a built-in dataset so need to import it explicitly.</p>
+
+<p>The process of migrating the other functions follows the same patterns as for the tidy function:</p>
+
+<ul>
+<li><code>use_r()</code> to create file</li>
+<li>copy function definition to file (but no <code>library</code> calls)</li>
+<li><code>load_all</code> to test if function is available</li>
+</ul>
+
+<p>If you want to check which functions are available after loading:</p>
+
+<pre><code>lsf.str(&quot;package:reproseries&quot;)
+</code></pre>
+
+<h2 id="check-your-build">Check your build</h2>
+
+<p>Using <code>check()</code> you get some tests for free. <code>check()</code> will do some basic sanity checks. In my case it complained about the <a href="https://stackoverflow.com/questions/9689104/installing-r-on-mac-warning-messages-setting-lc-ctype-failed-using-c">locale</a>, <a href="https://stackoverflow.com/questions/43688520/checking-description-meta-information-note">description field</a> and the <a href="https://mariakalimeri.github.io/sharable-r-tutorial/">license</a>. All of these were easy to fix and I would have never found out about them myself. Actually things were even easier than I thought. I tried to find the solution for fixing the <code>LICENSE</code> field all by myself but there&rsquo;s actually already a <code>devtools</code> function called <code>use_mit_license()</code> creating the exact setup we need.</p>
+
+<p>There&rsquo;s also an issue with using non-standard evaluation like the <code>tidyverse</code> packages do:</p>
+
+<pre><code>checking R code for possible problems ... NOTE
+  addCelsiusColumn: no visible binding for global variable ‘value’
+  calculateAutoCorrelation: no visible global function definition for
+    ‘acf’
+...
+</code></pre>
+
+<p>A solution is <a href="https://rlang.r-lib.org/reference/tidyeval-data.html">available</a> but it has some disadvantages:</p>
+
+<ul>
+<li>you have to add <code>.data</code> in pipes instead of using the implicit argument</li>
+<li>it means rewriting all existing functions</li>
+</ul>
+
+<p>I&rsquo;d rather wait for an official fix in the <code>tidyverse</code> itself.</p>
+
+<p>There&rsquo;s one remaining issue namely the current lack of documentation. This will be handled in later posts:</p>
+
+<pre><code>❯ checking for missing documentation entries ... WARNING
+  Undocumented code objects:
+    ‘addCelsiusColumn’ ‘calculateAutoCorrelation’
+    ‘plotAvgTemperaturesByYear’ ‘summariseAvgTemperatureByYear’
+    ‘tidyNottem’
+  All user-level objects in a package should have documentation entries.
+</code></pre>
+
+<p>In any case running <code>check()</code> regularly is a good sanity check!</p>
+
+<h2 id="install-your-own-package">Install your own package</h2>
+
+<p>Running <code>load_all()</code> just simulated loading the package. If you want the real thing run <code>install()</code>. Afterwards you can use your own package in any script by using <code>library</code> calls as before.</p>
+
+<p>This is how our analysis script would look like:</p>
+
+<pre><code>library(reproseries)
+
+# remove previous objects in global environment
+rm(list = ls())
+
+# objects
+temperatures &lt;- nottem %&gt;%
+  tidyNottem %&gt;%
+  ...
+</code></pre>
+
+<p>As you can see:</p>
+
+<ul>
+<li>there are no <code>library(tidyverse)</code>, &hellip; calls anymore</li>
+<li>the functions are in the package so no need to define them in the analysis</li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p><code>devtools</code> provide handy helper functions for all the important parts of creating a package. Get started with <code>create_package()</code> to create a package. Do this from scratch and not an existing directory. Run <code>use_git()</code> to quickly get a repo set up. You can test interactively by running <code>load_all()</code> to simulate how your package will be loaded, run <code>install()</code> if you&rsquo;re satisfied with the results and want to install your package locally. And remember to run <code>check()</code> as many times as possible to see if there are any issues to fix.</p>
+
+<p>We now have a decent scaffolding to add some tests in the next post.</p>
+
+		</div>
+	</div>
+</body>
+</html>
