@@ -6,10 +6,22 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Nov 2019 11:08:13 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 15:17:02 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Count the smiley faces</title>
+      <link>https://isaacverm.github.io/technical-notes/count-the-smiley-faces/</link>
+      <pubDate>Thu, 07 Nov 2019 15:17:02 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/technical-notes/count-the-smiley-faces/</guid>
+      <description>Problem Create a function counting how many valid smileys there are in an array.
+Solution The solution seems to need these functions:
+ a function to split a smiley in its characters some functions to check if eyes, mouth or nose are valid  Then loop over all smileys and split/check each of them.
+splitSmiley splitSmiley = smiley =&amp;gt; smiley.split(&amp;quot;&amp;quot;)  If the separator is &amp;quot;&amp;quot; the string is converted to an array of each of its characters.</description>
+    </item>
     
     <item>
       <title></title>

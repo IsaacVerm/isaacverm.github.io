@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Count the smiley faces" />
+<meta property="og:description" content="Problem Create a function counting how many valid smileys there are in an array.
+Solution The solution seems to need these functions:
+ a function to split a smiley in its characters some functions to check if eyes, mouth or nose are valid  Then loop over all smileys and split/check each of them.
+splitSmiley splitSmiley = smiley =&gt; smiley.split(&quot;&quot;)  If the separator is &quot;&quot; the string is converted to an array of each of its characters." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/technical-notes/count-the-smiley-faces/" />
+<meta property="article:published_time" content="2019-11-07T15:17:02+01:00" />
+<meta property="article:modified_time" content="2019-11-07T15:17:02+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Count the smiley faces"/>
+<meta name="twitter:description" content="Problem Create a function counting how many valid smileys there are in an array.
+Solution The solution seems to need these functions:
+ a function to split a smiley in its characters some functions to check if eyes, mouth or nose are valid  Then loop over all smileys and split/check each of them.
+splitSmiley splitSmiley = smiley =&gt; smiley.split(&quot;&quot;)  If the separator is &quot;&quot; the string is converted to an array of each of its characters."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Count the smiley faces</h1>
+			<div class="meta">Posted at &mdash; Nov 7, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="problem">Problem</h2>
+
+<p>Create a function <a href="https://www.codewars.com/kata/583203e6eb35d7980400002a/train/javascript">counting how many valid smileys there are in an array</a>.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>The solution seems to need these functions:</p>
+
+<ul>
+<li>a function to split a smiley in its characters</li>
+<li>some functions to check if eyes, mouth or nose are valid</li>
+</ul>
+
+<p>Then loop over all smileys and split/check each of them.</p>
+
+<h3 id="splitsmiley">splitSmiley</h3>
+
+<pre><code>splitSmiley = smiley =&gt; smiley.split(&quot;&quot;)
+</code></pre>
+
+<p>If the separator is <code>&quot;&quot;</code> the string is converted to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split">an array of each of its characters</a>.</p>
+
+<h3 id="checkeyes">checkEyes</h3>
+
+<pre><code>checkEyes = splittedSmiley =&gt; {
+        validEyes = [':',';']
+        eye = splittedSmiley[0]
+        return validEyes.includes(eye)
+    }
+</code></pre>
+
+<p>Note you do need an explicit return keyword.</p>
+
+<p>Make sure you understand the <code>in</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in">operator</a>. For arrays you must specify the index number instead of the index value which might be confusing if you&rsquo;re used to other languages like Python or R. So this:</p>
+
+<pre><code>eyes in validEyes
+</code></pre>
+
+<p>would not work because it will return <code>false</code>. You have to use the <code>includes</code> method of <code>Array</code>.</p>
+
+<h3 id="checkmouth">checkMouth</h3>
+
+<pre><code>checkMouth = splittedSmiley =&gt; {
+        validMouths = [')','D']
+        mouth = splittedSmiley[splittedSmiley.length - 1]
+        return validMouths.includes(mouth)
+    }
+</code></pre>
+
+<p>At first I used here but <code>pop()</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop">changes the array its called upon</a>. This results in bugs difficult to find.</p>
+
+<h3 id="countsmileys">countSmileys</h3>
+
+<pre><code>let counterSmileys = 0
+
+    arr.forEach(smiley =&gt; {
+        const splittedSmiley = splitSmiley(smiley)
+        const eyesOk = checkEyes(splittedSmiley)
+        const mouthOk = checkMouth(splittedSmiley)
+        let noseOk = true // if no nose it's ok
+
+        if (splittedSmiley.length === 3) {
+            // 3 means eyes, nose and mouth
+            noseOk = checkNose(splittedSmiley)
+        }
+
+        if (eyesOk &amp;&amp; noseOk &amp;&amp; mouthOk) {
+            counterSmileys += 1
+        }
+    })
+</code></pre>
+
+<p>A running counter for the number of smileys. Could have put these <code>if</code> statements in seperate functions to make things more clear.</p>
+
+<p><code>counterSmileys</code> is a <code>let</code> because it can change, if not I would have used <code>const</code>.</p>
+
+<p>In the end it was too bad the tests on Codewars kept failing and I couldn&rsquo;t see which tests failed exactly. This made it impossible to debug.</p>
+
+<h2 id="alternative-solutions">Alternative solutions</h2>
+
+<p>From the solutions with best practices <a href="https://www.codewars.com/kata/reviews/583203efeb35d7980400002c/groups/5a7543187e3b173d76000aa7">this one</a> was pretty readable. He created a set of rules as separate functions feeding them into a <code>filter</code> function like this:</p>
+
+<pre><code>const countSmileys = smileys =&gt;
+  smileys.filter(smiley =&gt;
+    smileyIsValid(smiley) &amp;&amp;
+    smileyHasValidEye(smiley) &amp;&amp;
+    smileyHasValidNose(smiley) &amp;&amp;
+    smileyHasValidMouth(smiley)
+  ).length
+</code></pre>
+
+<p>It almost reads like plain English.</p>
+
+<h2 id="concepts">Concepts</h2>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions">Functions in Javascript</a> can be defined in multiple ways:</p>
+
+<ul>
+<li>as a regular function</li>
+<li>as an arrow function</li>
+</ul>
+
+<p>Regular function:</p>
+
+<pre><code>function () {}
+</code></pre>
+
+<p>Arrow function:</p>
+
+<pre><code>() =&gt; {}
+</code></pre>
+
+<p>Compared to a regular function an arrow function:</p>
+
+<ul>
+<li>has no <code>this</code> (so no separate <a href="https://codeburst.io/all-about-this-and-new-keywords-in-javascript-38039f71780c">execution context</a>)</li>
+<li>is just shorter</li>
+</ul>
+
+<p>At first sight the syntax of the arrow function seems <a href="https://zendev.com/2018/10/01/javascript-arrow-functions-how-why-when.html">almost the same</a> as for a regular function. But there are shortcuts if:</p>
+
+<ul>
+<li>the function body is a single expression</li>
+<li>there&rsquo;s only a single argument</li>
+</ul>
+
+<p>In this example I also took advantage of the scoping rules by defining helper functions like <code>splitSmiley</code> within the overarching <code>countSmileys</code> function:</p>
+
+<p><em>The nested (inner) function is private to its containing (outer) function.</em></p>
+
+		</div>
+	</div>
+</body>
+</html>
