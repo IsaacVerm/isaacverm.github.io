@@ -6,10 +6,21 @@
     <description>Recent content in Technical-notes on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Nov 2019 15:17:02 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 20:45:56 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/technical-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Consonant value</title>
+      <link>https://isaacverm.github.io/technical-notes/consonant-value/</link>
+      <pubDate>Thu, 07 Nov 2019 20:45:56 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/technical-notes/consonant-value/</guid>
+      <description>Problem Calculate the word value of any word. Word value is defined as the sum of the values of the characters of any consecutive consonant string.
+Solution Steps:
+ split word in substrings of consonants value each letter in a substring sum the values in a substring find substring with highest sum   function solve(s) { splitCons = str = str.split(/a|e|i|o|u/).filter(subStr = subStr != &#34;&#34;) valueLetters = str = str.</description>
+    </item>
     
     <item>
       <title>Count the smiley faces</title>

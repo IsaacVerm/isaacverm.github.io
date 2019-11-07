@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Consonant value" />
+<meta property="og:description" content="Problem Calculate the word value of any word. Word value is defined as the sum of the values of the characters of any consecutive consonant string.
+Solution Steps:
+ split word in substrings of consonants value each letter in a substring sum the values in a substring find substring with highest sum   function solve(s) { splitCons = str = str.split(/a|e|i|o|u/).filter(subStr = subStr != &#34;&#34;) valueLetters = str = str." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/technical-notes/consonant-value/" />
+<meta property="article:published_time" content="2019-11-07T20:45:56+01:00" />
+<meta property="article:modified_time" content="2019-11-07T20:45:56+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Consonant value"/>
+<meta name="twitter:description" content="Problem Calculate the word value of any word. Word value is defined as the sum of the values of the characters of any consecutive consonant string.
+Solution Steps:
+ split word in substrings of consonants value each letter in a substring sum the values in a substring find substring with highest sum   function solve(s) { splitCons = str = str.split(/a|e|i|o|u/).filter(subStr = subStr != &#34;&#34;) valueLetters = str = str."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Consonant value</h1>
+			<div class="meta">Posted at &mdash; Nov 7, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="problem">Problem</h2>
+
+<p>Calculate the word value of any word. Word value is defined as the sum of the values of the characters of any consecutive consonant string.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>Steps:</p>
+
+<ul>
+<li>split word in substrings of consonants</li>
+<li>value each letter in a substring</li>
+<li>sum the values in a substring</li>
+<li>find substring with highest sum</li>
+</ul>
+
+<script src="https://embed.runkit.com" data-element-id="my-element"></script>
+
+<div id="my-element">function solve(s) {
+    splitCons = str => str.split(/a|e|i|o|u/).filter(subStr => subStr != "")
+    valueLetters = str => str.split("").map(char => char.charCodeAt(0) - 96)
+    sum = arrNumbers => arrNumbers.reduce((a,b) => a + b)
+    highest = arrNumbers => Math.max(...arrNumbers)
+
+    const splittedString = splitCons(s)
+    const sumValues = splittedString.map(subStr => sum(valueLetters(subStr)))
+    const highestValue = highest(sumValues)
+    return highestValue
+
+};</div>
+
+<h3 id="split-word-in-substrings-of-consonants">split word in substrings of consonants</h3>
+
+<pre><code>splitCons = str =&gt; str.split(/a|e|i|o|u/).filter(subStr =&gt; subStr != &quot;&quot;)
+</code></pre>
+
+<p><code>split()</code> doesn&rsquo;t only accept string values but also regular expressions.</p>
+
+<p>A small bug occured when there&rsquo;s 2 consecutive vowels. In that case you&rsquo;ll end up with an empty string in your array of strings. Hence the <code>filter()</code>.</p>
+
+<h3 id="value-each-letter-in-a-substring">value each letter in a substring</h3>
+
+<pre><code>valueLetters = str =&gt; str.split(&quot;&quot;).map(char =&gt; char.charCodeAt(0) - 96)
+</code></pre>
+
+<p>Each character corresponds to a number in the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt">UTF-16</a>. You can use this to convert <a href="https://stackoverflow.com/questions/22624379/how-to-convert-letters-to-numbers-with-javascript">letters to numbers</a>.</p>
+
+<h3 id="sum-the-values-in-a-substring">sum the values in a substring</h3>
+
+<pre><code>sum = arrNumbers =&gt; arrNumbers.reduce((a,b) =&gt; a + b)
+</code></pre>
+
+<p>Summing can be <a href="https://medium.com/@chrisburgin95/rewriting-javascript-sum-an-array-dbf838996ed0">easily done</a> with <code>reduce()</code>. You provide <code>reduce()</code> with a function which has an accumulator and a current value as arguments.</p>
+
+<h3 id="highest">highest</h3>
+
+<p>You could try to find the highest value with a combination of <code>reduce()</code> and <code>Math.max()</code>. However, <code>Math.max()</code> also accepts <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">rest parameters</a> as shown in the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max">example</a>.</p>
+
+<h2 id="alternative-solutions">Alternative solutions</h2>
+
+<p>Most solution seem to have followed the split, value and sum pattern. Also most used <code>reduce()</code> for finding the maximal value but I think <code>Math.max(...)</code> is nicer.</p>
+
+<h2 id="open-questions">Open questions</h2>
+
+<p>Is it a good idea to compose these functions in a <code>solve()</code> function?</p>
+
+		</div>
+	</div>
+</body>
+</html>
