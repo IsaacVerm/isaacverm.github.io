@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Nov 2019 10:45:16 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 12 Nov 2019 14:45:00 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reproducible analysis: documentation</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-documentation/</link>
+      <pubDate>Tue, 12 Nov 2019 14:45:00 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-documentation/</guid>
+      <description>Issue We wrote the code, we wrote the tests but we didn&amp;rsquo;t specify explicitly how the code can be used. Take for example the calculateAutoCorrelation function. From its name we can infer it should return some kind of auto correlation coefficient. But how exactly is this correlation calculated? What kind of lag we take into account? Those questions can more easily be answered if we add some metadata to the functions we created.</description>
+    </item>
     
     <item>
       <title>Reproducible analysis: testing</title>

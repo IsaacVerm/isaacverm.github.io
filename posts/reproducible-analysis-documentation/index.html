@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Reproducible analysis: documentation" />
+<meta property="og:description" content="Issue We wrote the code, we wrote the tests but we didn&rsquo;t specify explicitly how the code can be used. Take for example the calculateAutoCorrelation function. From its name we can infer it should return some kind of auto correlation coefficient. But how exactly is this correlation calculated? What kind of lag we take into account? Those questions can more easily be answered if we add some metadata to the functions we created." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/reproducible-analysis-documentation/" />
+<meta property="article:published_time" content="2019-11-12T14:45:00+01:00" />
+<meta property="article:modified_time" content="2019-11-12T14:45:00+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reproducible analysis: documentation"/>
+<meta name="twitter:description" content="Issue We wrote the code, we wrote the tests but we didn&rsquo;t specify explicitly how the code can be used. Take for example the calculateAutoCorrelation function. From its name we can infer it should return some kind of auto correlation coefficient. But how exactly is this correlation calculated? What kind of lag we take into account? Those questions can more easily be answered if we add some metadata to the functions we created."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Reproducible analysis: documentation</h1>
+			<div class="meta">Posted at &mdash; Nov 12, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="issue">Issue</h2>
+
+<p>We wrote the code, we wrote the tests but we didn&rsquo;t specify explicitly how the code can be used. Take for example the <code>calculateAutoCorrelation</code> function. From its name we can infer it should return some kind of auto correlation coefficient. But how exactly is this correlation calculated? What kind of lag we take into account? Those questions can more easily be answered if we add some <a href="http://r-pkgs.had.co.nz/man.html">metadata</a> to the functions we created.</p>
+
+<p>In this post I won&rsquo;t go into documentation in general but will focus specifically on how to document functions in R. So READMEs, vignettes, won&rsquo;t be covered here (although vignettes will come up when talking about literate programming).</p>
+
+<h2 id="solution-and-alternatives">Solution and alternatives</h2>
+
+<p>Yet again we use what&rsquo;s suggested by <code>devtools</code> so we&rsquo;ll stick to <code>roxygen2</code>. This package helps with combining code and documentation in the same place. I didn&rsquo;t explore other alternatives.</p>
+
+<h2 id="adding-a-comment">Adding a comment</h2>
+
+<p>As an example I&rsquo;ll show how the <code>plotAvgTemperaturesByYear</code> in <code>visualize.R</code> is documented.</p>
+
+<p>Comments consist of two parts:</p>
+
+<ul>
+<li>an introduction (specified implicitly)</li>
+<li>tags (specified explicitly)</li>
+</ul>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Everything before the first tag is considered the introduction. The introduction consists of:</p>
+
+<ul>
+<li>a title</li>
+<li>a description</li>
+<li>details</li>
+</ul>
+
+<p>The title and description are required so you can&rsquo;t document a title without also documenting a description.</p>
+
+<p>This is how it&rsquo;s put into practice:</p>
+
+<pre><code>#' Plot of average temperatures by year
+#'
+#' \code{plotAvgTemperaturesByYear} plots the average temperature by year in a line graph.
+plotAvgTemperaturesByYear &lt;- function(avg_temperatures,
+                                      place = &quot;Nottingham&quot;) {
+                                          ...
+</code></pre>
+
+<p>As you can see I don&rsquo;t use any explicit tags saying this is a title, this is a description, &hellip; By default the first line is the title, the second line is the description and any following lines are details. Lines are separated with <code>#'</code>.</p>
+
+<p>You have to specify the function name with <code>\code{}</code> but this seems kind of superfluous since you&rsquo;re already documenting a function so by definition you know its name.</p>
+
+<p>Without adding any specific tags we can already create the documentation by typing the following in the console:</p>
+
+<pre><code>devtools::document()
+</code></pre>
+
+<p>This creates a <code>.Rd</code> file in a <code>man</code> folder. You don&rsquo;t actually need to know how this file works since you always manipulate it by documenting functions right next to those functions.</p>
+
+<p>Now if you type <code>?plotAvgTemperaturesByYear</code> in the console you get a small summary of what the function does. This works exactly the same as it does for built-in functions like <code>sum</code>, <code>mean</code>, &hellip;</p>
+
+<p><img src="/basic-roxygen-doc-example.png" alt="basic roxygen doc example" /></p>
+
+<p>We didn&rsquo;t have to specify it explicitly but <code>roxygen2</code> adds some information about usage and what package the function belongs to.</p>
+
+<h3 id="tags">Tags</h3>
+
+<p>The function is still poorly documented of course. In this post I won&rsquo;t go over all the existing tags cause these are already <a href="http://r-pkgs.had.co.nz/man.html">well documented</a>. When documenting functions you can get by by using just 3 tags:</p>
+
+<ul>
+<li><code>@param</code> (to document input)</li>
+<li><code>@return</code> (to document output)</li>
+<li><code>@examples</code> (self-explanatory)</li>
+</ul>
+
+<p>Let&rsquo;s make things a bit more precise:</p>
+
+<pre><code>...
+#' @param avg_temperatures Data.frame. Has years and their corresponding average temperature.
+#' @param place String. It's assumed this function is called with the nottem built-in dataset.
+#' This dataset records the temperatures in Nottingham. Nottingham is the default argument.
+#' You can override this argument if the need arises.
+#' @return ggplot object
+#' @examples
+#' avg_temperatures &lt;- data.frame(year = c(1920, 1921, 1922, 1923),
+#'                                avgTemperature = c(5, 10, 8, 9))
+#' plotAvgTemperaturesByYear(avg_temperatures)
+#' @export
+plotAvgTemperaturesByYear &lt;- ...
+</code></pre>
+
+<p>Important note: the <code>@export</code> is essential. If not the function is not added to the <a href="https://stackoverflow.com/questions/44722297/could-not-find-function-in-roxygen-examples-during-cmd-check">namespace</a> and checking using <code>devtools::check()</code> will fail. This is an issue because examples are more than just text, they&rsquo;re actually executed each time you run <code>devtools::check()</code> to make sure they&rsquo;re at least executable (it&rsquo;s still up to you to make sure they&rsquo;re relevant).</p>
+
+<p>Running the documentation again gives:</p>
+
+<p><img src="/advanced-roxygen-doc-example.png" alt="advanced roxygen doc example" /></p>
+
+<p>You can always document more but I tend to keep it to a minimum. Everything you document can also get out of date again so it&rsquo;s good to strike the right balance.</p>
+
+<p>Another benefit of using the <code>roxygen</code> comment is we get a warning less now when running <code>devtools::check()</code>.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Documenting using <code>roxygen2</code> is quite easy. All you need to know is some basic tags and the <code>devtools::document()</code> function takes care of the rest. For this reproducible analysis example I haven&rsquo;t gone through the effort of documenting every function available. The functions are basic and are already covered with tests so in a way they&rsquo;re self-documenting. However, if the project would be more complex I&rsquo;d certainly make sure to document every function available as a best practice.</p>
+
+		</div>
+	</div>
+</body>
+</html>
