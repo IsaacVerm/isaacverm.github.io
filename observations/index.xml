@@ -6,10 +6,21 @@
     <description>Recent content in Observations on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Nov 2019 11:08:13 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 14 Nov 2019 22:20:18 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/observations/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://isaacverm.github.io/observations/14-11-2019/</link>
+      <pubDate>Thu, 14 Nov 2019 22:20:18 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/observations/14-11-2019/</guid>
+      <description>First entry I ever noticed on RPubs. Holy duality of pie chart and calling every document final. Hope the author is ok.
+“I could come up with something else of my own again, put it out on a label, tour, etc. It’s just gotta feel free if that happens. I will probably honestly be 40 or 50 when that happens and extremely fat.”
+I work on R packages that alleviate some of the pain of transforming and presenting data in a dreary office environment.</description>
+    </item>
     
     <item>
       <title></title>
