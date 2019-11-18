@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 Nov 2019 22:05:14 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 18 Nov 2019 13:16:19 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Analysis scores Belgian soccer league</title>
+      <link>https://isaacverm.github.io/posts/scores.jpl/</link>
+      <pubDate>Mon, 18 Nov 2019 13:16:19 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/scores.jpl/</guid>
+      <description>Analysis made on request. Wanted to explorer scores in the Belgian League. Was quite interesting how much interesting things you can do with a modicum of data. I just focused on the raw scores without linking them to teams or anything and already several, more or less interesting, questions came up naturally.
+Code here, analysis itself hosted on RPubs.</description>
+    </item>
     
     <item>
       <title>Possible rank changes next gameweek Jupiler Pro League</title>
