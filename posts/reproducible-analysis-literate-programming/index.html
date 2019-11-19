@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Reproducible analysis: literate programming" />
+<meta property="og:description" content="Issue When starting off as a beginner doing data analysis you often start with hacking together some scripts. You pick whatever you can find, throw it in the mix and let everything run. These scripts create output like plots, tables, &hellip; which you manually copy afterwards into some document. There are several reasons why this is frankly an excruciating way of working:
+ if some output changes you have to manually copy the changed results to the document where you write the analysis changing some parameters of your analysis requires rerunning everything the explanation of what your code does is totally decoupled from the code itself  All this doesn&rsquo;t really favor reproducible analysis." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/reproducible-analysis-literate-programming/" />
+<meta property="article:published_time" content="2019-11-12T18:43:48+01:00" />
+<meta property="article:modified_time" content="2019-11-12T18:43:48+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reproducible analysis: literate programming"/>
+<meta name="twitter:description" content="Issue When starting off as a beginner doing data analysis you often start with hacking together some scripts. You pick whatever you can find, throw it in the mix and let everything run. These scripts create output like plots, tables, &hellip; which you manually copy afterwards into some document. There are several reasons why this is frankly an excruciating way of working:
+ if some output changes you have to manually copy the changed results to the document where you write the analysis changing some parameters of your analysis requires rerunning everything the explanation of what your code does is totally decoupled from the code itself  All this doesn&rsquo;t really favor reproducible analysis."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Reproducible analysis: literate programming</h1>
+			<div class="meta">Posted at &mdash; Nov 12, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="issue">Issue</h2>
+
+<p>When starting off as a beginner doing data analysis you often start with hacking together some scripts. You pick whatever you can find, throw it in the mix and let everything run. These scripts create output like plots, tables, &hellip; which you manually copy afterwards into some document. There are several reasons why this is frankly an excruciating way of working:</p>
+
+<ul>
+<li>if some output changes you have to manually copy the changed results to the document where you write the analysis</li>
+<li>changing some parameters of your analysis requires rerunning everything</li>
+<li>the explanation of what your code does is totally decoupled from the code itself</li>
+</ul>
+
+<p>All this doesn&rsquo;t really favor reproducible analysis. Hence a paradigm shift, <a href="http://www.literateprogramming.com/">literate programming</a>. Literate programming means you explain what your code does at the same time and place where you write the code. An excellent way to put this into practice is <a href="https://rmflight.github.io/posts/2014/07/analyses_as_packages.html">using a package structure to write your analysis</a> with <a href="http://r-pkgs.had.co.nz/vignettes.html">vignettes</a>. Vignettes combine code and descriptive text in the same document using <a href="https://rmarkdown.rstudio.com/lesson-1.html">rmarkdown</a>. Vignettes can also be output to html which makes it ideal to be published as blog posts. Even more, it&rsquo;s an excellent way of doing it since you can tap into all a package has to offer (testing, documentation) which greatly benefits your analysis as well.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>Vignettes are supported by default in <code>devtools</code>.</p>
+
+<h2 id="create-the-vignette">Create the vignette</h2>
+
+<p>First of all we use <code>devtools</code> to create a vignette. This vignette will be our analysis file.</p>
+
+<pre><code>use_vignette(&quot;nottingham-temperatures&quot;)
+</code></pre>
+
+<p>Note you can&rsquo;t run <code>devtools:use_vignette</code> anymore as described in the <a href="http://r-pkgs.had.co.nz/vignettes.html">R packages</a> book. <code>devtools</code> is no longer the owner of this function, it now belongs to <code>usethis</code>. <a href="https://usethis.r-lib.org/reference/index.html">usethis</a> offers plenty more interesting functionality, integration with GitHub (as shown in the <a href="https://isaacverm.github.io/posts/reproducible-analysis-package-dev/">package development</a> post) and Travis among other things.</p>
+
+<p>As expected from <code>devtools</code> it does everything necessary to start with a vignette:</p>
+
+<ul>
+<li>intermediary build files are automatically added to <code>.gitignore</code></li>
+<li>dependencies are added to <code>DESCRIPTION</code></li>
+<li>and most importantly the <code>nottingham-temperatures.Rmd</code> file has been created</li>
+</ul>
+
+<p>The <code>.Rmd</code> file generated contains some standard setup for knitr (the vignette engine we use). A <a href="https://www.rforge.net/doc/packages/knitr/vignette_engines.html">vignette engine</a> transforms the input file (in our case in <code>rmarkdown</code> format) to the right output (<code>html</code> by default and that&rsquo;s also what we&rsquo;re aiming for).</p>
+
+<h2 id="writing-the-analysis">Writing the analysis</h2>
+
+<p>We&rsquo;ll use the vignette as a way to show how the functions we wrote previously can be combined and what their output is. The vignette itself is divided in multiple parts:</p>
+
+<ul>
+<li>a small introduction</li>
+<li>an explanation of what the input data looks like</li>
+<li>going through the functions in each analysis phase</li>
+</ul>
+
+<p>Some defaults for the image size seem to be off but can be <a href="https://sebastiansauer.github.io/figure_sizing_knitr/">modified</a>.</p>
+
+<p>There actually aren&rsquo;t a lot of really important things to say about writing vignettes. It&rsquo;s just a combination of R and Markdown. This <a href="https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf">cheatsheet</a> shows most of the options available to you. It doesn&rsquo;t make a lot of sense to go over all of them. Best thing is just to look them up when you need them. Options exist to hide your code, cache results, show warnings or not, &hellip;</p>
+
+<p>This is the complete analysis in <a href="https://github.com/IsaacVerm/reproseries/blob/793068abf1ee7920e1f97bdecbbab5c2ceb90b86/vignettes/nottingham-temperatures.Rmd">rmarkdown format</a>.</p>
+
+<h2 id="generating-the-vignette">Generating the vignette</h2>
+
+<p>By knitting the vignette you get the exported analysis file in the format of your choosing. When using RStudio, which is really the most handy IDE for R, the knitting is completely integrated in the IDE:</p>
+
+<p><img src="/knit-to-html.png" alt="knit to html" /></p>
+
+		</div>
+	</div>
+</body>
+</html>
