@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Visualize average goals per game in Processing" />
+<meta property="og:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
+Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/visualize-average-goals-per-game/" />
+<meta property="article:published_time" content="2019-11-26T09:36:05+01:00" />
+<meta property="article:modified_time" content="2019-11-26T09:36:05+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Visualize average goals per game in Processing"/>
+<meta name="twitter:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
+Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Visualize average goals per game in Processing</h1>
+			<div class="meta">Posted at &mdash; Nov 26, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p>In a <a href="https://rpubs.com/isaacverm/scoresJpl">previous analysis</a> I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with <a href="https://processing.org/">Processing</a> but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.</p>
+
+<h2 id="parts-of-the-graph">Parts of the graph</h2>
+
+<p>A good place to see what we need to develop is the original <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/R/visualize-scores.R">plotting function</a> in <code>ggplot2</code>. The graph looks like this:</p>
+
+<p><img src="/ggplot-average-goals-per-season.png" alt="ggplot average goals per season" /></p>
+
+<p>We can see the graph has these elements:</p>
+
+<ul>
+<li>season on x axis</li>
+<li>average number of scored goals by game on y axis</li>
+<li>axes labels</li>
+<li>title</li>
+<li>legend</li>
+<li>bars (separate bars for home and away)</li>
+</ul>
+
+<p>Some extras will be implemented:</p>
+
+<ul>
+<li>we&rsquo;ll have to make sure the graph is robust to data changes</li>
+<li>colours should match the colour scheme used in <code>ggplot2</code></li>
+</ul>
+
+<p>I won&rsquo;t implement the graph all at once. It seems a good idea to work from the inside out starting with the bars, then adding the x and y axes and finishing with labels, title and legend.</p>
+
+<h2 id="getting-the-data-into-processing">Getting the data into Processing</h2>
+
+<h3 id="average-goals-by-season-dataset">Average goals by season dataset</h3>
+
+<p>Before drawing anything we need to decide how to get the data into Processing. The <a href="https://processing.org/tutorials/data/">data chapter</a> of the <em>Learning Processing</em> book has a good explanation. The basic data format is just a <code>String</code>. This naturally leads to putting the data in csv format.</p>
+
+<p>The dataset for the average goals by season already existed but still had to be written to file. While at it I made some slight modifications since the variable <code>goals_home_or_away</code> is a bit too long and reminded me a bit too much of a particular tv series. So now the <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/data/long_average_goals_by_season.csv">dataset</a> contains these variables:</p>
+
+<ul>
+<li>season</li>
+<li><a href="https://english.stackexchange.com/questions/187032/is-there-a-word-for-the-status-of-a-team-being-home-or-away">venue</a></li>
+<li>goals</li>
+</ul>
+
+<p>Venue refers to if a game is played at home or away.</p>
+
+<h3 id="loading-the-data">Loading the data</h3>
+
+<p>Loading the data consists of 2 steps:</p>
+
+<ul>
+<li>putting the data in the <code>/data</code> folder of the sketch</li>
+<li>reading the data</li>
+</ul>
+
+<p>Reading the data can be done in 2 ways:</p>
+
+<ul>
+<li>we can either treat it as just plain text and use the <code>loadStrings()</code> function</li>
+<li>or we can leverage it&rsquo;s a csv by using the more specific <code>loadTable()</code> function</li>
+</ul>
+
+<p>If the data is loaded as text, you get an array of which each element is a row. The first element are the headers and the rest are data values. Working with the data using the <a href="https://processing.org/reference/Table.html">Table</a> class makes things way simpler. This class has convenient methods like <code>getStringColumn()</code> so you don&rsquo;t have to loop over all the rows each time you want to select a column. The example below shows how the data is first loaded as a table and then the season column is selected.</p>
+
+<pre><code>table = loadTable(&quot;average_goals_by_season.csv&quot;, &quot;header&quot;);
+
+String[] season = table.getStringColumn(&quot;season&quot;);
+</code></pre>
+
+<p>The first issue arising is we have both home and away goals in a single column. While implementing the function <code>getHomeGoals</code> to split the home and away goals, I ran into a slippery problem. It&rsquo;s <a href="https://processing.org/reference/String_equals_.html">not possible</a> in Processing to compare 2 strings with <code>==</code>.</p>
+
+<h2 id="the-bars">The bars</h2>
+
+<p>I&rsquo;m not the first one to implement a bar chart in Processing although I didn&rsquo;t really find a good tutorial making one. <a href="https://www.openprocessing.org/sketch/431/#">This sketch</a> has some comments showing what issues might arise.</p>
+
+<h3 id="first-attempt">First attempt</h3>
+
+<p>The main function used for bars is <code>rect()</code> for drawing rectangles. A <a href="https://github.com/IsaacVerm/processing-plot-jpl/blob/c312dc845457e23057b545ad7046aeac9c42a011/plot_average_goals_by_season/plot_average_goals_by_season.pde">first implementation</a> just looping over the goals and plotting them as bars looks like this:</p>
+
+<p><img src="/basic-bars-average-goals-by-season.png" alt="basic bar chart" /></p>
+
+<p>In a sense mission accomplished since these are clearly bars but somewhat underwhelming in other departments:</p>
+
+<ul>
+<li>the bars are dripping from the ceiling while they should be rising from the bottom up</li>
+<li>whitespace to the right side of the graph</li>
+<li>they&rsquo;re just not white and not filled with any other color</li>
+</ul>
+
+<h3 id="turn-the-bars-upside-down">Turn the bars upside down</h3>
+
+<p>By default the <a href="https://processing.org/tutorials/drawing/">Processing coordinate system</a> has the (0,0) point in the top left corner. In order to fix the issue, we have to base ourselves on the window height. This is what <code>drawHomeGoals</code> looks like now:</p>
+
+<pre><code>void drawHomeGoals(float[] home_goals) {
+  // define as 2 corners instead of corner + width/height
+  rectMode(CORNERS);
+
+  // calculate variables needed for calculation corners
+  float bar_width = width / (home_goals.length * 3);
+  float max_home_goals = max(home_goals);
+  float zone_width = 3 * bar_width;
+  float y_margin = 0.1;
+
+  // plot bars
+  for (int i = 0; i &lt; home_goals.length; i++) {
+    float x_corner_one = i * zone_width;
+    float y_corner_one = height * (1 - y_margin);
+    float x_corner_two = i * zone_width + bar_width;
+    float y_corner_two = height - home_goals[i] * (height / ceil(max_home_goals));
+
+    rect(x_corner_one,
+         y_corner_one,
+         x_corner_two,
+         y_corner_two);
+  }
+}
+
+</code></pre>
+
+<p>A small sketch makes the function easier to understand. In general <a href="https://processing.org/tutorials/anatomy/">sketching on paper is a good idea</a> to get an idea of where you want to end up.</p>
+
+<p><img src="/sketch-average-goals-per-season.png" alt="sketch average goals per season" /></p>
+
+<p>We define a zone as a combination of 3 elements:</p>
+
+<ul>
+<li>bar for home goals</li>
+<li>bar for away goals</li>
+<li>empty space between bars</li>
+</ul>
+
+<p>In comparison to the original plot the empty space is a bit larger. By default I set it as the width of 1 bar. Also these bars don&rsquo;t start at the edges of the window, but a small margin is provided. Later on the labels and ticks for the x axes will be placed here.</p>
+
+<p>The calculation of the y position of the opposite corner of a bar is the most convoluted part. You have to scale the number of goals somehow. The maximum number of average home goals is a bit less than 2. Translated directly this would mean 2 pixels. This is negligible in a normal window size of for example 500 pixels. That&rsquo;s why we multiply by <code>height / ceil(max_home_goals)</code>. Taking the ceiling of the maximum home goals guarantees the bars won&rsquo;t exceed the height of the window.</p>
+
+<p>Changing the <code>rectMode</code> to <code>CORNERS</code> enables us to draw in other directions than just down. In <code>rectMode</code> the first 2 arguments are the x and y position of one corner , the next 2 arguments are the x and y position of the opposite corner.</p>
+
+<p>Note the <code>size()</code> function has the side effect of automatically creating <code>width</code> and <code>height</code> variables. Since a sketch is only valid if the size of the window is defined, we can assume <code>width</code> and <code>height</code> always to be defined. There&rsquo;s no need to specify them as arguments to the <code>drawHomeGoals</code>. Originally I wasn&rsquo;t aware of these <code>width</code> and <code>height</code> variables so I tried to do something like this:</p>
+
+<pre><code>int window_width = 500;
+int window_height = 500;
+
+void setup() {
+  size(window_width, window_height);
+</code></pre>
+
+<p>But then you get an error saying Processing could not determine the size of your sketch.</p>
+
+<p>Now the graph looks like this:</p>
+
+<p><img src="/bars-bottom-up-average-goals-by-season.png" alt="bars bottom up" /></p>
+
+<p>The bars are now neatly arranged at the bottom of the screen, but the away goals bars are still missing.</p>
+
+		</div>
+	</div>
+</body>
+</html>

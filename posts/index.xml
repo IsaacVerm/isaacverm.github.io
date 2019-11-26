@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Nov 2019 13:16:19 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 09:36:05 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Visualize average goals per game in Processing</title>
+      <link>https://isaacverm.github.io/posts/visualize-average-goals-per-game/</link>
+      <pubDate>Tue, 26 Nov 2019 09:36:05 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/visualize-average-goals-per-game/</guid>
+      <description>In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&amp;rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
+Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2.</description>
+    </item>
     
     <item>
       <title>Analysis scores Belgian soccer league</title>
