@@ -46,8 +46,9 @@ Of Jewish descent, he spent parts of his life as a Protestant missionary, Anglic
       <pubDate>Tue, 26 Nov 2019 09:36:05 +0100</pubDate>
       
       <guid>https://isaacverm.github.io/posts/visualize-average-goals-per-game/</guid>
-      <description>In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&amp;rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
-Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2.</description>
+      <description>In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&amp;rsquo;ve been playing around with Processing but only ever focused on small examples instead of a real project. Reproducing the original ggplot2 graph mentioned above seems like a good start. Nothing massive, still feasible.
+Parts of the graph What exactly did the original plot look like?
+We can discern these elements:</description>
     </item>
     
     <item>

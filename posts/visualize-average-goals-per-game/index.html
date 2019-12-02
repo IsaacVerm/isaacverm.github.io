@@ -7,16 +7,18 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta property="og:title" content="Visualize average goals per game in Processing" />
-<meta property="og:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
-Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2." />
+<meta property="og:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but only ever focused on small examples instead of a real project. Reproducing the original ggplot2 graph mentioned above seems like a good start. Nothing massive, still feasible.
+Parts of the graph What exactly did the original plot look like?
+We can discern these elements:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://isaacverm.github.io/posts/visualize-average-goals-per-game/" />
 <meta property="article:published_time" content="2019-11-26T09:36:05+01:00" />
 <meta property="article:modified_time" content="2019-11-26T09:36:05+01:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Visualize average goals per game in Processing"/>
-<meta name="twitter:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.
-Parts of the graph A good place to see what we need to develop is the original plotting function in ggplot2."/>
+<meta name="twitter:description" content="In a previous analysis I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with Processing but only ever focused on small examples instead of a real project. Reproducing the original ggplot2 graph mentioned above seems like a good start. Nothing massive, still feasible.
+Parts of the graph What exactly did the original plot look like?
+We can discern these elements:"/>
 <link
     href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
     rel="stylesheet"
@@ -36,41 +38,35 @@ Parts of the graph A good place to see what we need to develop is the original p
 		<div class="markdown">
 			
 
-<p>In a <a href="https://rpubs.com/isaacverm/scoresJpl">previous analysis</a> I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with <a href="https://processing.org/">Processing</a> but never focused on finishing something. Might be good not to focus on building something massive from the start so a graph seems relatively self-contained.</p>
+<p>In a <a href="https://rpubs.com/isaacverm/scoresJpl">previous analysis</a> I made a graph showing the average number of home and away goals by season. For some time I&rsquo;ve been playing around with <a href="https://processing.org/">Processing</a> but only ever focused on small examples instead of a real project. Reproducing the original <code>ggplot2</code> graph mentioned above seems like a good start. Nothing massive, still feasible.</p>
 
 <h2 id="parts-of-the-graph">Parts of the graph</h2>
 
-<p>A good place to see what we need to develop is the original <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/R/visualize-scores.R">plotting function</a> in <code>ggplot2</code>. The graph looks like this:</p>
+<p>What exactly did the original <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/R/visualize-scores.R">plot</a> look like?</p>
 
 <p><img src="/ggplot-average-goals-per-season.png" alt="ggplot average goals per season" /></p>
 
-<p>We can see the graph has these elements:</p>
+<p>We can discern these elements:</p>
 
 <ul>
-<li>season on x axis</li>
-<li>average number of scored goals by game on y axis</li>
-<li>axes labels</li>
-<li>title</li>
-<li>legend</li>
-<li>bars (separate bars for home and away)</li>
+<li>there are bars for both home and away goals</li>
+<li>season labels are on the x axis</li>
+<li>the y axis marks the average number of scored goals</li>
+<li>the graph has a title</li>
+<li>there&rsquo;s a legend showing what color is home and what color is away</li>
 </ul>
 
-<p>Some extras will be implemented:</p>
+<p>In this post I don&rsquo;t plan on remaking the whole graph. I keep it limited to the bars and x/y labels.</p>
 
-<ul>
-<li>we&rsquo;ll have to make sure the graph is robust to data changes</li>
-<li>colours should match the colour scheme used in <code>ggplot2</code></li>
-</ul>
-
-<p>I won&rsquo;t implement the graph all at once. It seems a good idea to work from the inside out starting with the bars, then adding the x and y axes and finishing with labels, title and legend.</p>
+<p>I also won&rsquo;t implement the graph all at once. We work from the inside out starting with the bars and then moving on to the x and y axis.</p>
 
 <h2 id="getting-the-data-into-processing">Getting the data into Processing</h2>
 
 <h3 id="average-goals-by-season-dataset">Average goals by season dataset</h3>
 
-<p>Before drawing anything we need to decide how to get the data into Processing. The <a href="https://processing.org/tutorials/data/">data chapter</a> of the <em>Learning Processing</em> book has a good explanation. The basic data format is just a <code>String</code>. This naturally leads to putting the data in csv format.</p>
+<p>Before drawing anything we need to decide how to get the data into Processing. The <a href="https://processing.org/tutorials/data/">data chapter</a> of the <em>Learning Processing</em> book has a good explanation how to go about this. The most basic data format in Processing is just a <code>String</code>. This naturally leads to us using data in csv format.</p>
 
-<p>The dataset for the average goals by season already existed but still had to be written to file. While at it I made some slight modifications since the variable <code>goals_home_or_away</code> is a bit too long and reminded me a bit too much of a particular tv series. So now the <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/data/long_average_goals_by_season.csv">dataset</a> contains these variables:</p>
+<p>The dataset for the average goals by season already existed since it was part of a <a href="https://isaacverm.github.io/posts/scores.jpl/">previous analysis</a>. but still had to be written to file. While at it I made some slight modifications since the variable <code>goals_home_or_away</code> is a bit too long and reminded me a bit too much of a particular tv series. So now the <a href="https://github.com/IsaacVerm/scoresJpl/blob/master/data/long_average_goals_by_season.csv">dataset</a> contains these variables:</p>
 
 <ul>
 <li>season</li>
@@ -96,36 +92,31 @@ Parts of the graph A good place to see what we need to develop is the original p
 <li>or we can leverage it&rsquo;s a csv by using the more specific <code>loadTable()</code> function</li>
 </ul>
 
-<p>If the data is loaded as text, you get an array of which each element is a row. The first element are the headers and the rest are data values. Working with the data using the <a href="https://processing.org/reference/Table.html">Table</a> class makes things way simpler. This class has convenient methods like <code>getStringColumn()</code> so you don&rsquo;t have to loop over all the rows each time you want to select a column. The example below shows how the data is first loaded as a table and then the season column is selected.</p>
-
-<pre><code>table = loadTable(&quot;average_goals_by_season.csv&quot;, &quot;header&quot;);
-
-String[] season = table.getStringColumn(&quot;season&quot;);
-</code></pre>
-
-<p>The first issue arising is we have both home and away goals in a single column. While implementing the function <code>getHomeGoals</code> to split the home and away goals, I ran into a slippery problem. It&rsquo;s <a href="https://processing.org/reference/String_equals_.html">not possible</a> in Processing to compare 2 strings with <code>==</code>.</p>
+<p>If the data is loaded as text, you get an array of which each element is a row. The first element are the headers and the rest are data values. However, working with the data using the <a href="https://processing.org/reference/Table.html">Table</a> class makes things way simpler. This class has convenient methods like <code>getStringColumn()</code> so you don&rsquo;t have to loop over all the rows each time you want to select a column.</p>
 
 <h2 id="the-bars">The bars</h2>
 
-<p>I&rsquo;m not the first one to implement a bar chart in Processing although I didn&rsquo;t really find a good tutorial making one. <a href="https://www.openprocessing.org/sketch/431/#">This sketch</a> has some comments showing what issues might arise.</p>
+<p>Now on to the drawing. I&rsquo;m not the first one to implement a bar chart in Processing although I was a bit surprised not to find a good tutorial for making one, even after some extensive googling. <a href="https://www.openprocessing.org/sketch/431/#">This sketch</a> ended up being the most useful. It has some comments showing what issues might come up while drawing bar charts.</p>
 
 <h3 id="first-attempt">First attempt</h3>
 
-<p>The main function used for bars is <code>rect()</code> for drawing rectangles. A <a href="https://github.com/IsaacVerm/processing-plot-jpl/blob/c312dc845457e23057b545ad7046aeac9c42a011/plot_average_goals_by_season/plot_average_goals_by_season.pde">first implementation</a> just looping over the goals and plotting them as bars looks like this:</p>
+<p>A <a href="https://github.com/IsaacVerm/processing-plot-jpl/blob/c312dc845457e23057b545ad7046aeac9c42a011/plot_average_goals_by_season/plot_average_goals_by_season.pde">first implementation</a> just loops over the average number of home goals by season and plots them as bars:</p>
 
 <p><img src="/basic-bars-average-goals-by-season.png" alt="basic bar chart" /></p>
 
 <p>In a sense mission accomplished since these are clearly bars but somewhat underwhelming in other departments:</p>
 
 <ul>
-<li>the bars are dripping from the ceiling while they should be rising from the bottom up</li>
-<li>whitespace to the right side of the graph</li>
-<li>they&rsquo;re just not white and not filled with any other color</li>
+<li>the bars are dripping from the top while they should be aligned at the bottom</li>
+<li>there&rsquo;s a lot of whitespace at the right side of the graph</li>
+<li>the bars are not colored</li>
 </ul>
+
+<p>First thing to tackle is the rotation of the bars.</p>
 
 <h3 id="turn-the-bars-upside-down">Turn the bars upside down</h3>
 
-<p>By default the <a href="https://processing.org/tutorials/drawing/">Processing coordinate system</a> has the (0,0) point in the top left corner. In order to fix the issue, we have to base ourselves on the window height. This is what <code>drawHomeGoals</code> looks like now:</p>
+<p>By default the <a href="https://processing.org/tutorials/drawing/">Processing coordinate system</a> has the (0,0) point in the top left corner. This doesn&rsquo;t play well with drawing bars from the bottom up. In order to make it easier for us, it&rsquo;s recommended to change the <a href="https://processing.org/reference/rectMode_.html">rectMode</a> to <code>CORNERS</code>. In <code>rectMode</code> the first 2 arguments are the x and y position of one corner and the next 2 arguments are the x and y position of the opposite corner.This is what <code>drawHomeGoals</code> looks like now:</p>
 
 <pre><code>void drawHomeGoals(float[] home_goals) {
   // define as 2 corners instead of corner + width/height
@@ -165,28 +156,154 @@ String[] season = table.getStringColumn(&quot;season&quot;);
 <li>empty space between bars</li>
 </ul>
 
-<p>In comparison to the original plot the empty space is a bit larger. By default I set it as the width of 1 bar. Also these bars don&rsquo;t start at the edges of the window, but a small margin is provided. Later on the labels and ticks for the x axes will be placed here.</p>
+<p>In comparison to the original <code>ggplot</code> graph the empty space inbetween bars is a bit larger. By default it&rsquo;s configured equal to the width of 1 bar. Also these bars don&rsquo;t start at the edges of the window, but a small margin is provided. Later on the labels and ticks for the x axes will be placed here.</p>
 
-<p>The calculation of the y position of the opposite corner of a bar is the most convoluted part. You have to scale the number of goals somehow. The maximum number of average home goals is a bit less than 2. Translated directly this would mean 2 pixels. This is negligible in a normal window size of for example 500 pixels. That&rsquo;s why we multiply by <code>height / ceil(max_home_goals)</code>. Taking the ceiling of the maximum home goals guarantees the bars won&rsquo;t exceed the height of the window.</p>
+<p>The calculation of the y position of the opposite corner of a bar is the most convoluted part. You have to scale the number of goals somehow. The maximum number of average home goals is a bit less than 2. Mapped directly to the canvas this would mean 2 pixels. This is negligible in a normal window size of for example 500 pixels. That&rsquo;s why we multiply by <code>height / ceil(max_home_goals)</code>. Taking the ceiling of the maximum home goals guarantees the bars won&rsquo;t exceed the height of the window.</p>
 
-<p>Changing the <code>rectMode</code> to <code>CORNERS</code> enables us to draw in other directions than just down. In <code>rectMode</code> the first 2 arguments are the x and y position of one corner , the next 2 arguments are the x and y position of the opposite corner.</p>
-
-<p>Note the <code>size()</code> function has the side effect of automatically creating <code>width</code> and <code>height</code> variables. Since a sketch is only valid if the size of the window is defined, we can assume <code>width</code> and <code>height</code> always to be defined. There&rsquo;s no need to specify them as arguments to the <code>drawHomeGoals</code>. Originally I wasn&rsquo;t aware of these <code>width</code> and <code>height</code> variables so I tried to do something like this:</p>
-
-<pre><code>int window_width = 500;
-int window_height = 500;
-
-void setup() {
-  size(window_width, window_height);
-</code></pre>
-
-<p>But then you get an error saying Processing could not determine the size of your sketch.</p>
+<p>Note the <code>size()</code> function has the side effect of automatically creating <code>width</code> and <code>height</code> variables. Since a sketch is only valid if the size of the window is defined, we can assume <code>width</code> and <code>height</code> always to be defined. There&rsquo;s no need to specify them as arguments to the <code>drawHomeGoals</code>.</p>
 
 <p>Now the graph looks like this:</p>
 
 <p><img src="/bars-bottom-up-average-goals-by-season.png" alt="bars bottom up" /></p>
 
-<p>The bars are now neatly arranged at the bottom of the screen, but the away goals bars are still missing.</p>
+<p>The bars are now neatly arranged at the bottom of the screen, but:</p>
+
+<ul>
+<li>they&rsquo;re not colored</li>
+<li>the away goals bars are still missing.</li>
+</ul>
+
+<h3 id="color-the-bars">Color the bars</h3>
+
+<p>To see what color the bars had originally, there&rsquo;s a handy Chrome extension called <a href="https://www.colorzilla.com/">ColorZilla</a>. We also have to make sure the bars have no borders. By default rectangles in Processing have both a fill (the inside) and a stroke. By calling <code>noStroke()</code> we make sure the borders are removed.</p>
+
+<h3 id="away-goal-bars">Away goal bars</h3>
+
+<p>The difference between away and goal home bars is twofold:</p>
+
+<ul>
+<li>they have a different position (one next to the other)</li>
+<li>they have a different color</li>
+</ul>
+
+<p>We use the helper function <code>setColor</code> to help with making <code>drawHomeGoals</code> more generally applicable. The first idea was to define this helper function nested within the overarching draw function. Curiously enough I discovered this is <a href="https://stackoverflow.com/questions/26152938/nested-functions-processing">not possible</a> and not the way to handle that situation in Java. I opted to just make these helper functions globally defined. Not the best way but can always refactor later on.</p>
+
+<p>This is the current status:</p>
+
+<p><img src="/home-and-away-bars.png" alt="home and away bars" /></p>
+
+<p>The bars closely resemble those created in <code>ggplot2</code>!</p>
+
+<h2 id="refactor-to-object-oriented-approach">Refactor to object-oriented approach</h2>
+
+<h3 id="why-object-oriented">Why object-oriented?</h3>
+
+<p>The code for the graph at this moment works just fine but sadly doesn&rsquo;t scale too well. We need a different, modular approach to keep it maintainable. This is called <a href="https://processing.org/tutorials/objects/">object oriented programming</a>.</p>
+
+<blockquote>
+<p>Object-oriented programming is the marriage of all of the programming fundamentals: data and functionality.</p>
+</blockquote>
+
+<p>The main advantage of object-oriented programming for me in this case was threefold:</p>
+
+<ul>
+<li>it forced me to think about what elements there are in the graph</li>
+<li>also forces you to think how these elements relate to eachother</li>
+<li>the code is modular so changes can be made in a single place</li>
+</ul>
+
+<p>There are <a href="https://dev.to/austinbh/the-four-pillars-of-object-oriented-programming-5bda">many more advantages</a> to object-oriented programming, but the above were the most clear for me in this example.</p>
+
+<p>Normally you would write your code in an object oriented way from the start. I expected this sketch to be smaller than it turned out to be so didn&rsquo;t see no reason to overcomplicate things from the start. Turned out I ended overcomplicating by trying not to overcomplicate. However there&rsquo;s a silver lining. As mentioned in the Processing tutorial, it&rsquo;s a good exercice to rewrite code from not object-oriented to object-oriented.</p>
+
+<h3 id="migration-in-practice">Migration in practice</h3>
+
+<p>The migration itself is done in two phases:</p>
+
+<ul>
+<li>first we <a href="https://github.com/IsaacVerm/processing-plot-jpl/tree/5aedc8eec1085cb5329c9ebcab8d1ba9eab0e99f">extract the functions</a></li>
+<li>afterwards the code is <a href="https://github.com/IsaacVerm/processing-plot-jpl/tree/45a57b3ceec9aac039a7824a4dd832fc5fbb596d">divided in classes</a></li>
+</ul>
+
+<p>What the code actually accomplishes doesn&rsquo;t change by migrating. The only thing changing is the organization and the way to think about the code.</p>
+
+<p>In the end I reckon the biggest added benefit here was the use of inheritance. Take for example the bars. The bars displaying the home goals and away goals are similar because:</p>
+
+<ul>
+<li>they both have no border</li>
+<li>they both are drawn in <code>CORNERS</code> mode</li>
+<li>the rules of how their y values are determined are the same</li>
+</ul>
+
+<p>But they&rsquo;re also different:</p>
+
+<ul>
+<li>the fill color changes based on the venue</li>
+<li>the position within a zone changes based on the venue</li>
+</ul>
+
+<p>By defining a <code>GoalsBar</code> class which is extended by the <code>HomeGoalsBar</code> and <code>AwayGoalsBar</code> classes we get the benefit of:</p>
+
+<ul>
+<li>only having to define the common fields and methods once</li>
+<li>having the elements specifc to each type of bar in a single place</li>
+</ul>
+
+<p>I chose to define these classes:</p>
+
+<ul>
+<li>GoalsBar</li>
+<li>HomeGoalsBar (extending GoalsBar)</li>
+<li>AwayGoalsBar (extending GoalsBar)</li>
+<li>Goals</li>
+<li>XLabel</li>
+<li>YLabels</li>
+<li>Zone</li>
+</ul>
+
+<p>So most classes map directly to visible elements on the graph except for the <code>Goals</code> class used to handle the data part. The <code>Zone</code> class is the missing link between the <code>Goals</code> class and the bar classes. The number of seasons to display (so the data) determines the zone width which in turn determines the bar width. There might be other options to classify the code but this one seemed the most straightforward.</p>
+
+<h3 id="axes">Axes</h3>
+
+<p>Just to wrap it up I also decided to add the axes. The end result looks like this:</p>
+
+<p><img src="/plot-avg-goals-with-bars.png" alt="end result with bars" /></p>
+
+<p>In the end it seems like quite a lot of time invested for neglible results. But at the same time I learned more about the intricacies of object-oriented programming which was much needed.</p>
+
+<h2 id="open-questions-and-notes">Open questions and notes</h2>
+
+<p>Some questions arose for which I don&rsquo;t have a definite answer yet.</p>
+
+<h3 id="can-functionality-be-part-of-the-constructor">Can functionality be part of the constructor?</h3>
+
+<p>Take the <code>HomeGoalsBar</code> class where the x values of both corners have to be set. I chose to do this in the constructor itself like this:</p>
+
+<pre><code>x_corner_one = _i * _zone_width + _bar_width;
+x_corner_two = _i * _zone_width + 2 * _bar_width;
+</code></pre>
+
+<p>However, I also could have created separate <code>setXCornerOne</code> and <code>setXCornerTwo</code> methods.</p>
+
+<h3 id="method-using-fields-not-defined-in-class">Method using fields not defined in class</h3>
+
+<p>Bars have to be displayed for both the <code>HomeGoalsBar</code> and <code>AwayGoalsBar</code> classes so the super class <code>GoalsBar</code> would be a natural place to put this <code>display</code> method. However, to display a bar you need the coordinates of both the first and second corner. The y coordinates are available for the <code>GoalsBar</code> class but the x coordinates are specific to home and away.</p>
+
+<p>So if we define the <code>display</code> method in the super class it used fields not available. As an alternative the <code>display</code> function is duplicated at the moment between the <code>HomeGoalsBar</code> and <code>AwayGoalsBar</code> classes.</p>
+
+<h3 id="should-i-use-getters-and-setters">Should I use getters and setters?</h3>
+
+<p>Should <a href="https://forum.processing.org/two/discussion/20655/good-or-bad-accessing-object-variables-directly">getter and setter methods</a> be used to have access to the attributes of an object or can we access these attributes directly?</p>
+
+<h3 id="how-can-classes-work-together">How can classes work together?</h3>
+
+<p>At the moment I use this pattern:</p>
+
+<pre><code>int zones_count = goals.getVenueGoalsCount();
+zone = new Zone(zones_count);
+</code></pre>
+
+<p>So first I get the attribute of an instance to pass it as an argument for the construction of another object. This workds, but I can&rsquo;t help to think there must be a better way of having these classes work together.</p>
 
 		</div>
 	</div>
