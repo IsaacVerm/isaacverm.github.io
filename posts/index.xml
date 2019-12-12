@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 26 Nov 2019 09:36:05 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 02 Dec 2019 14:22:24 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Web app for easy access to newspapers: Django, Travis, Cypress and Heroku</title>
+      <link>https://isaacverm.github.io/posts/easy-newspapers-outline/</link>
+      <pubDate>Mon, 02 Dec 2019 14:22:24 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/easy-newspapers-outline/</guid>
+      <description>Use case For the elderly it can be hard to use modern technology. There can be so many obstacles blocking you from accessing the content you want. I noticed my grandmother struggling and decided to make a small web app tailored to her needs. The web app had to be as simple as possible, offer no way to get lost and be accessible (large font so it&amp;rsquo;s easy to read, clear and concise language, &amp;hellip;)</description>
+    </item>
     
     <item>
       <title>Visualize average goals per game in Processing</title>
