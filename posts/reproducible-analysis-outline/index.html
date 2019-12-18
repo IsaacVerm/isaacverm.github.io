@@ -46,13 +46,13 @@
 
 <p>The basic analysis will be done in R (since I&rsquo;m most familiar with the <code>tidyverse</code>) but for any other topics I use whatever suits the needs at that moment.</p>
 
-<p>Code can be found in <a href="https://github.com/IsaacVerm/reproducible-analysis">this GitHub repository</a>.</p>
+<p>Code for the entire series can be found in the <a href="https://github.com/IsaacVerm/reproseries/">reproseries repository</a>.</p>
 
 <h2 id="example">Example</h2>
 
-<h3 id="function-for-each-step">function for each step</h3>
+<h3 id="what-functions-are-used-in-the-example">What functions are used in the example?</h3>
 
-<p>The basic example used has a function for <a href="https://r4ds.had.co.nz/explore-intro.html">each step in the data analysis cycle</a>. So in total there are 6 steps:</p>
+<p>The basic example used has a function for <a href="https://r4ds.had.co.nz/explore-intro.html">almost each step in the data analysis cycle</a>. A complete analysis consists of 6 steps:</p>
 
 <ul>
 <li>import</li>
@@ -62,6 +62,8 @@
 <li>model</li>
 <li>communicate</li>
 </ul>
+
+<p>In this example there&rsquo;s no import since we&rsquo;ll use a built-in dataset. The communication part is done in a separate vignette so there as well no need to write code as function.</p>
 
 <p>Some steps deserve some extra explanation. Tidying and transforming are distinct steps. Tidying means you put your data in tidy format. Any data obeying the following rules is considered tidy:</p>
 
@@ -75,16 +77,16 @@
 
 <p>Transforming on the other hand means manipulating the data until it suits your needs. You add columns, rename columns, sort records, &hellip; Communicating means creating a report. This as well can be automated (using <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a> which will be covered in one of the posts later on).</p>
 
-<h3 id="built-in-dataset">built-in dataset</h3>
+<h3 id="built-in-dataset">Built-in dataset</h3>
 
 <p>To not overcomplicate things I decided to work with one of the <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html">R built-in datasets</a>. No package has to be loaded to have access to this data. Didn&rsquo;t want to go for a dataset too classic like <code>Titanic</code> so instead opted for the <code>nottem</code> <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/nottem.html">dataset</a>. This dataset contains the average air temperature at Nottingham from 1920-1939. I opted for a dataset which has a few variables but not too many (in this case month, year and temperature). Also the dataset is not tidy by default: the rows are the years and the columns are the months.</p>
 
 <h2 id="topics-covered">Topics covered</h2>
 
 <ul>
+<li>package development</li>
 <li>testing</li>
 <li>documentation</li>
-<li>package development</li>
 <li>literate programming</li>
 <li>command line</li>
 <li>orchestrating</li>
@@ -93,16 +95,14 @@
 <li>continuous integration</li>
 </ul>
 
-<p>Not sure I&rsquo;ll be able to cover all these topics but the order above is roughly the order in which I plan to tackle each topic. After explaining the basic example the first topic is testing. Before we do all kinds of black magic with the code it makes sense to see if it actually does what it has to do (even though the example is extremely simple). Documentation goes hand in hand with testing (because tests are in way just a type of documentation) so will be covered directly afterwards.</p>
+<p>The order above is the order in which each of these topics is tackled. The next post explains in more detail what the example looks like. After explaining the basic example, package development has absolute priority since it impacts all later choices (folder structure, integration with tests, &hellip;). Before we do all kinds of black magic with the code it makes sense to see if it actually does what it has to do (even though the example is rather simple). Documentation goes hand in hand with testing (because tests are in way just a type of documentation) so will be covered directly afterwards. With the basic setup ready at that point, it&rsquo;s time to move on to the literature programming part which explains how to report analysis results.</p>
 
-<p>After that package development has absolute priority since it impacts all later choices (folder structure, integration with tests, &hellip;). Then it&rsquo;s on to the command line. This is a necessary zwischenzug to be able to continue with the orchestration part (since you need something to well&hellip; orchestrate). The literature programming part following explains how to report.</p>
-
-<p>Now it&rsquo;s onto more technical stuff with the trinity of environment, version control and continuous integration. Environment is all about getting the right versions of the software we use, version control helps us keep track of changes and continuous integration means previous parts like testing are executed automatically regularly.</p>
+<p>Then it&rsquo;s on to the command line and doing some experiments with making your R code more portable. This is a necessary preparation to be able to continue with the orchestration part (since you need something to well&hellip; orchestrate). At last it&rsquo;s onto the most technical part with the trinity of environment, version control and continuous integration. Environment is all about getting the right versions of the software we use, version control helps us keep track of changes and continuous integration means previous parts like testing are executed automatically regularly.</p>
 
 <p>So we end up with 9 topics which can be divided in 3 main parts:</p>
 
 <ul>
-<li>a basic program
+<li>a basic analysis
 
 <ul>
 <li>testing</li>
@@ -125,9 +125,7 @@
 </ul></li>
 </ul>
 
-<p>It&rsquo;s clear the code will be refactored multiple times. I can almost guarantee following the posts chronologically won&rsquo;t be the fastest way to solve these issues. Pedagogical concerns trump efficiency here.</p>
-
-<p>The exact contents of some of these topics might still be unclear but things will get more clear in the posts themselves. In addition, although I have a vague idea what a topic should cover, I&rsquo;d like to reserve the space for myself to improvise.</p>
+<p>It&rsquo;s clear the code will be refactored multiple times. I can almost guarantee following the posts chronologically won&rsquo;t be the fastest way to solve these issues. Pedagogical concerns trump efficiency here. What exactly these topics entail might still be quite vague at the moment, but things will get more clear in the posts themselves.</p>
 
 <h2 id="structure-topic">Structure topic</h2>
 
@@ -141,10 +139,6 @@
 </ul>
 
 <p>I put it as more or less fixed because in the end it&rsquo;s the subject itself dictating what&rsquo;s needed. But in any case I&rsquo;ll try to use this structure as a guideline. I&rsquo;d like the posts to be short but also exhausitive. I&rsquo;ll try to justify whatever I do as much as possible backing it up with references to manuals, official documentation, other tutorials, &hellip;</p>
-
-<h2 id="what-s-next">What&rsquo;s next</h2>
-
-<p>A general plan is made, now it&rsquo;s time to make it a reality. Next post will be explaining the example used.</p>
 
 		</div>
 	</div>

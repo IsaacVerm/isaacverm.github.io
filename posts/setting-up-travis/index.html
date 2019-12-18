@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Setting up Travis" />
+<meta property="og:description" content="In the last post I went over the tools used for testing, continuous integration and cloud deployment together with a small explanation why exactly I chose those tools to use. In this post I&rsquo;ll go more into detail about Travis (which is one of the tools used next to Cypress and Heroku). The explanation won&rsquo;t be exhaustive, but I&rsquo;ll just note what struck me most while incorporating Travis in the easy newspapers project." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/setting-up-travis/" />
+<meta property="article:published_time" content="2019-12-17T23:36:35+01:00" />
+<meta property="article:modified_time" content="2019-12-17T23:36:35+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Setting up Travis"/>
+<meta name="twitter:description" content="In the last post I went over the tools used for testing, continuous integration and cloud deployment together with a small explanation why exactly I chose those tools to use. In this post I&rsquo;ll go more into detail about Travis (which is one of the tools used next to Cypress and Heroku). The explanation won&rsquo;t be exhaustive, but I&rsquo;ll just note what struck me most while incorporating Travis in the easy newspapers project."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Setting up Travis</h1>
+			<div class="meta">Posted at &mdash; Dec 17, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p>In the <a href="https://isaacverm.github.io/posts/easy-newspapers-outline/">last post</a> I went over the tools used for testing, continuous integration and cloud deployment together with a small explanation why exactly I chose those tools to use. In this post I&rsquo;ll go more into detail about Travis (which is one of the tools used next to Cypress and Heroku). The explanation won&rsquo;t be exhaustive, but I&rsquo;ll just note what struck me most while incorporating Travis in the <a href="https://github.com/IsaacVerm/easy-newspapers">easy newspapers</a> project. For all of the tools used excellent documentation is available.</p>
+
+<p>A tool not mentioned explicitly below is Git for version control. However, it made writing this post way easier. One of the <a href="https://medium.com/@nawarpianist/git-commit-best-practices-dab8d722de99">Git best practices</a> which helped me most collecting the notes for this post was having small commits. A bad habit I picked up along the way was to almost unthinkingly use <code>git add -A</code> to stage all the untracked and modified files at once. This way I ended up with commits containing a hodgepodge of unrelated code together. By thinking about what I wanted to do before coding anything, then do it and stage only those files related to what I just did, I ended up with small, granular commits. Revisiting the code a few days after working on the web app was a breeze since I could go over the commits one by one and read it almost as a story.</p>
+
+<h2 id="continuous-integration">Continuous integration</h2>
+
+<p>As mentioned, for the continuous integration part I chose to use Travis. But what&rsquo;s <a href="https://docs.travis-ci.com/user/for-beginners/">continuous integration</a>?</p>
+
+<blockquote>
+<p>Continuous Integration is the practice of merging in small code changes frequently - rather than merging in a large change at the end of a development cycle. The goal is to build healthier software by developing and testing in smaller increments.</p>
+
+<p>This is where Travis CI comes in. As a continuous integration platform, Travis CI supports your development process by automatically building and testing code changes, providing immediate feedback on the success of the change.</p>
+</blockquote>
+
+<p>The keyword above is automatically. Each time a commit is pushed to GitHub a build on Travis is triggered. This build verifies if the code changes don&rsquo;t break anything. This way you can always be sure you didn&rsquo;t break anything majorly (provided you wrote good tests) which is frankly very relaxing.</p>
+
+<p>Setting up Travis is very straightforward since you only need to add a <code>travis.yml</code> config file which looks like this:</p>
+
+<pre><code>language: node_js
+node_js:
+  - 10
+addons:
+  apt:
+    packages:
+      - libgconf-2-4
+cache:
+  npm: true
+  directories:
+    - ~/.cache
+install:
+  - npm ci
+script:
+  - $(npm bin)/cypress run
+</code></pre>
+
+<h2 id="language">Language</h2>
+
+<p>The absolute minimum to have in a <code>travis.yml</code> file is having the language specified. Since we use Cypress to run our E2E tests which uses Javascript, I defined <code>node</code> as language. Cypress itself seems to <a href="https://docs.cypress.io/guides/guides/continuous-integration.html#Travis">advice to use node 10</a> so I just copied that suggestion, although <code>node 13</code> is already available.</p>
+
+<h2 id="phases">Phases</h2>
+
+<p>A job in Travis is a series of steps. A build is a group of jobs. In the <code>travis.yml</code> file <code>install</code> and <code>script</code> are phases in a job. Difference between the two is <code>install</code> will always run before <code>script</code>. In the <code>install</code> phase, the dependencies specified in the <code>package.json</code> file are installed. To install dependencies locally I normally use <code>npm install</code> but on any CI platform it&rsquo;s better to use <code>npm ci</code>. The <a href="https://docs.npmjs.com/cli/ci.html">npm ci</a> command differs from the <code>npm install</code> command in that it is more strict (e.g. it always removes existing <code>node_modules</code> directories before) and also is a bit lighter than <code>npm install</code> because it doesn&rsquo;t install user-oriented features (but I <a href="https://stackoverflow.com/questions/52499617/what-is-the-difference-between-npm-install-and-npm-ci">wasn&rsquo;t able to trace down</a> what exactly those user-oriented features are).</p>
+
+<h2 id="installing-extra-dependencies">Installing extra dependencies</h2>
+
+<p>Cypress needs <code>libgconf</code> (used for <a href="https://projects-old.gnome.org/gconf/">storing application preferences</a>) to work properly, but this package is not included in the default version of Ubuntu. You could do something with <code>apt-get</code> in the <code>before_install</code> phase of the build but you can accomplish the same more easily by using the <a href="https://docs.travis-ci.com/user/installing-dependencies/">apt addon</a> available in Travis.</p>
+
+<h2 id="caching">Caching</h2>
+
+<p>Originally I just copied the Travis configuration as adviced by Cypress. This configuration contains the following lines:</p>
+
+<pre><code>cache:
+  npm: true
+  directories:
+    - ~/.cache
+</code></pre>
+
+<p>In the <a href="https://docs.travis-ci.com/user/caching/">Travis caching documentation</a> I discovered these lines can actually be omitted since npm is omitted by default since July 2019. Running the build <a href="https://github.com/IsaacVerm/easy-newspapers/commit/920d76abb25f6bc6b6f99fbaa6b97208b4caf01b">without this caching configuration</a> however seemed to increase the build time somewhat.</p>
+
+<p><img src="/increase-build-time-travis-without-explicit-caching.png" alt="increase build time travis" /></p>
+
+<p>Since the build now takes half a minute more to finish, I decided to keep the explicit caching of <code>npm</code>.</p>
+
+<h2 id="deployment">Deployment</h2>
+
+<p>Travis can easily integrated with other services. For example an <a href="https://docs.travis-ci.com/user/deployment/heroku/">integration with Heroku</a> is available which makes it easy to deploy after a succesful build. However, I chose to use another approach in which:</p>
+
+<ol>
+<li>I deploy to Heroku without checking anything</li>
+<li>run tests on Travis against this deployed Heroku version</li>
+</ol>
+
+<p>I treat the version on Heroku as disposable so it doesn&rsquo;t matter too much if a broken version is deployed. You can always revert to a previous working version (and you know which version worked before because of CI, magic!). This way I can keep the CI part as lightweight as possible, without having to specify multiple jobs. Originally I had an approach with multiple jobs:</p>
+
+<ol>
+<li>job running local version of the web server</li>
+<li>run tests on Travis against this local version</li>
+</ol>
+
+<p>To my shame I had to discover the job running the tests had no access to the locally running version of the web server. If I&rsquo;d done a bit more <a href="https://github.com/travis-ci/travis-ci/issues/6054">upfront research</a> I would have quickly realized my mistake but in practice it took some time before I came to realize my gaffe.</p>
+
+<h2 id="build-not-fully-customized">Build not fully customized</h2>
+
+<p>The Travis build process can be <a href="https://docs.travis-ci.com/user/customizing-the-build">customized to a great degree</a> but in this project I did not take advantage of all of the options. For example I did not specify any branches to build which means by default any branch will be build. This can be annoying if you&rsquo;re experimenting with separate branches which are tested each time even though you know it&rsquo;s still work in progress.</p>
+
+<p>If the project would get better, it would make sense to revisit this <code>travis.yml</code> file to make it more customized to the specific needs (don&rsquo;t build all branches, ,&hellip;).</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Using Travis is at the same time very easy in the sense that you only need a single configuration file to get started. On the other hand, by informing yourself about all the options available you can accomplish a lot in a succinct way.</p>
+
+<p>I learned continuous integration is not some long term thing but can already pay off dividends in the short run. Since on every push to Github the tests run, you immediately get notified if something goes wrong. Even if you think nothing could have gone wrong. A good example where CI saved me from a frustrating debugging session is <a href="https://github.com/IsaacVerm/easy-newspapers/commit/7274eb501312c2ba80b6cee2608b5f25377438c5">this commit</a> where I forgot to add the <code>atoma</code> package to the <code>requirements.txt</code> (specifying the packages to install for our Python web app). Locally I had this package installed so everything ran smooth. However, since CI starts from a clean slate each time, it based itself on the <code>requirements.txt</code> file checked into version control. Here of course the required package was mentioned. The app broke down, but I could immediately handle the issue since the commit was small and the error message on CI was clear. If I would have continued developing locally I wouldn&rsquo;t have noticed anything. Untangling the mess surely would have taken some time.</p>
+
+		</div>
+	</div>
+</body>
+</html>
