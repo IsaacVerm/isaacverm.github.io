@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Dec 2019 14:22:24 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 17 Dec 2019 23:36:35 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Setting up Travis</title>
+      <link>https://isaacverm.github.io/posts/easy-newspapers-tools/</link>
+      <pubDate>Tue, 17 Dec 2019 23:36:35 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/easy-newspapers-tools/</guid>
+      <description>In the last post I went over the tools used for testing, continuous integration and cloud deployment together with a small explanation why exactly I chose those tools to use. In this post I&amp;rsquo;ll go more into detail about Travis (which is one of the tools used next to Cypress and Heroku). The explanation won&amp;rsquo;t be exhaustive, but I&amp;rsquo;ll just note what struck me most while incorporating Travis in the easy newspapers project.</description>
+    </item>
     
     <item>
       <title>Web app for easy access to newspapers: Django, Travis, Cypress and Heroku</title>
