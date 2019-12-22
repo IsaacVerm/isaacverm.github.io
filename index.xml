@@ -6,10 +6,20 @@
     <description>Recent content on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Dec 2019 23:36:35 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 21 Dec 2019 14:10:22 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reproducible analysis: orchestration</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-orchestration/</link>
+      <pubDate>Sat, 21 Dec 2019 14:10:22 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-orchestration/</guid>
+      <description>This post will cover the handling complexity part as outlined in the introduction post of this series. Originally I was aiming to use make, just as in the original series of posts which inspired mine. After some consideration I chose to opt for Airflow:
+ it&amp;rsquo;s used heavily at work I have no experience at all using it (in contrast with make which I used in a basic way from time to time) it comes with out-of-the-box integrations leverages Python abilities  All of the above should make the learning curve of Airflow lower than the make learning curve.</description>
+    </item>
     
     <item>
       <title>Setting up Travis</title>

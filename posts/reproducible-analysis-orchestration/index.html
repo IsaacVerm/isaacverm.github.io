@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Reproducible analysis: orchestration" />
+<meta property="og:description" content="This post will cover the handling complexity part as outlined in the introduction post of this series. Originally I was aiming to use make, just as in the original series of posts which inspired mine. After some consideration I chose to opt for Airflow:
+ it&rsquo;s used heavily at work I have no experience at all using it (in contrast with make which I used in a basic way from time to time) it comes with out-of-the-box integrations leverages Python abilities  All of the above should make the learning curve of Airflow lower than the make learning curve." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/reproducible-analysis-orchestration/" />
+<meta property="article:published_time" content="2019-12-21T14:10:22+01:00" />
+<meta property="article:modified_time" content="2019-12-21T14:10:22+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reproducible analysis: orchestration"/>
+<meta name="twitter:description" content="This post will cover the handling complexity part as outlined in the introduction post of this series. Originally I was aiming to use make, just as in the original series of posts which inspired mine. After some consideration I chose to opt for Airflow:
+ it&rsquo;s used heavily at work I have no experience at all using it (in contrast with make which I used in a basic way from time to time) it comes with out-of-the-box integrations leverages Python abilities  All of the above should make the learning curve of Airflow lower than the make learning curve."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Reproducible analysis: orchestration</h1>
+			<div class="meta">Posted at &mdash; Dec 21, 2019</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p>This post will cover the handling complexity part as outlined in the <a href="https://isaacverm.github.io/posts/reproducible-analysis-outline/">introduction post of this series</a>. Originally I was aiming to use <a href="https://www.gnu.org/software/make/">make</a>, just as in <a href="http://www.jonzelner.net/statistics/make/reproducibility/2016/06/01/makefiles/">the original series of posts</a> which inspired mine. After some consideration I chose to opt for <a href="https://airflow.apache.org/">Airflow</a>:</p>
+
+<ul>
+<li>it&rsquo;s used heavily at work</li>
+<li>I have no experience at all using it (in contrast with <code>make</code> which I used in a basic way from time to time)</li>
+<li>it comes with out-of-the-box integrations</li>
+<li>leverages Python abilities</li>
+</ul>
+
+<p>All of the above should make the learning curve of <code>Airflow</code> lower than the <code>make</code> learning curve. <code>make</code> on the other hand is more portable (since it&rsquo;s not based on any high-level programming language like Python).</p>
+
+<h2 id="issue">Issue</h2>
+
+<p>In the previous post of this series we wrote the functions needed for each part of the analysis. In the <a href="https://isaacverm.github.io/posts/reproducible-analysis-literate-programming/">literate programming</a> post we weaved together these functions with the analysis text. However, this is not a really flexible format. Say for example we just want to experiment a bit with the input data and see how this affects the models or plots afterwards? Updating the <code>RMarkdown</code> report for each experiment is very unwieldy.</p>
+
+<p>There are two approaches we can take to make running the analysis more flexible. Both of them involve running code through the command line.</p>
+
+<ul>
+<li>we can parametrize the report</li>
+<li>we can create separate scripts combining several functions together</li>
+</ul>
+
+<h3 id="parametrizing-reports">Parametrizing reports</h3>
+
+<p><a href="https://rmarkdown.rstudio.com/developer_parameterized_reports.html%23parameter_types%2F">Parametrizing</a> means we can run the report with different input values. You define the parameters you want to use at the top of the report and have access to them within your report. By running the rmarkdown render command you can pass the exact values to use to the report.</p>
+
+<p>I chose not to go this way because it&rsquo;s still not flexible enough. It&rsquo;s true you can change the inputs but the order in which functions are called remains fixed.</p>
+
+<h3 id="separate-scripts">Separate scripts</h3>
+
+<p>The second approach is to:</p>
+
+<ul>
+<li>create scripts combining all the functions for a logical phase in the analysis</li>
+<li>make these scripts executable from the command line</li>
+<li>run these scripts in a orchestrator (e.g. <code>Airflow</code>)</li>
+</ul>
+
+<p>Advantage here is we can combine these script in any order we want, let them depend on eachother however we want,&hellip; Since this is the most flexible way, this is the path I chose to take.</p>
+
+<h2 id="creating-scripts">Creating scripts</h2>
+
+<p>Scripts are in essence just a combination of functions who logically belong together. Since the creating scripts and running them from the command line steps are so tightly interwoven, I discuss them together in this part. Take as an example the transform script:</p>
+
+<pre><code>#!/usr/bin/env Rscript
+library(magrittr)
+library(reproseries)
+library(readr)
+library(docopt)
+
+'Usage:
+transform-script.R &lt;input_path&gt; &lt;output_path&gt;
+
+]' -&gt; doc
+
+arguments &lt;- docopt(doc)
+
+readr::read_csv(file = arguments$input_path) %&gt;%
+  reproseries::addCelsiusColumn() %&gt;%
+  reproseries::summariseAvgTemperatureByYear() %&gt;%
+  readr::write_csv(path = arguments$output_path)
+
+</code></pre>
+
+<p>Each of these scripts has roughly the same structure:</p>
+
+<ul>
+<li>shebang at the top</li>
+<li>loading of libraries used</li>
+<li>a <code>docopt</code> description</li>
+<li>the functions themselves</li>
+</ul>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a> <code>#!/usr/bin/env Rscript</code> says to run our script using <code>Rscript</code>. Alternatives to <code>Rscript</code> exist like <a href="https://support.rstudio.com/hc/en-us/articles/218012917-How-to-run-R-scripts-from-the-command-line">R CMD BATCH</a>. Since <code>Rscript</code> did the job for me I decided just to stick with it. To really be able to execute the script from the command line you have to make sure it&rsquo;s executable by running <code>chmod +x {file}</code>.</p>
+
+<p>The libraries loaded contain of course our main package <code>reproseries</code> but also additional helper libraries like <a href="https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> for its pipe operator, <a href="https://cran.r-project.org/web/packages/readr/vignettes/readr.html">readr</a> to easily deal with reading and writing to disk and <a href="https://github.com/docopt/docopt.R">docopt</a> which helps in parametrizing the script. <code>docopt</code> can do way more than just parametrizing but the parametrization was all I needed for <code>Airflow</code>.</p>
+
+<p>In the code itself I first read an input data csv, run the functions related to transforming found at <code>R/transform.R</code> and then write the transformed data to file. In the usage part you can see both <code>&lt;input_path&gt;</code> and <code>&lt;output_path&gt;</code> are specified. Because these are written between angel brackets <code>docopt</code> interprets them as command arguments. This means they are mandatory. I want the input and output paths to be flexible so later on I can orchestrate them to be written anywhere I want (might be locally, might be in the cloud).</p>
+
+<h2 id="run-scripts-with-airflow">Run scripts with Airflow</h2>
+
+<h3 id="what-is-a-dag">What is a DAG?</h3>
+
+<p>We have abstracted our functions together into several logical scripts which we can run from the command line. This is where <code>Airflow</code> comes into play. Airflow helps you in <a href="https://airflow.apache.org/docs/stable/concepts.html">managing tasks and their dependencies</a>. The main concept to grasp about <code>Airflow</code> is the DAG. DAG is a <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">mathemical term</a> meaning Directed Acyclic Graph. It sounds complex but its meaning is easy to deviate:</p>
+
+<ul>
+<li>it&rsquo;s a <a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">graph</a> because it consists of nodes and connections between those nodes</li>
+<li>it&rsquo;s <a href="https://en.wikipedia.org/wiki/Directed_graph">directed</a> because the connections have a direction</li>
+<li>it&rsquo;s <a href="https://en.wikipedia.org/wiki/Cycle_graph#Directed_cycle_graph">acyclic</a> because the directions are one-way</li>
+</ul>
+
+<p>In <code>Airflow</code> speak the nodes are tasks and the connection between nodes are dependencies. Once a task is done there&rsquo;s no way to go back to that task in the same run.</p>
+
+<p>The DAG is the most important concept but just a DAG won&rsquo;t get us far. The DAG just defines in what order the work has to be done, the work itself is done in operators and tasks. Let&rsquo;s have a look at the <a href="https://github.com/IsaacVerm/reproseries/blob/master/airflow/dags/temperatures.py">DAG used for the analysis of the temperatures</a>. There are several parts in this file:</p>
+
+<ul>
+<li>importing the libraries needed</li>
+<li>the DAG definition</li>
+<li>the tasks based on operators</li>
+<li>a definition of the dependencies</li>
+</ul>
+
+<h3 id="dag-definition">DAG definition</h3>
+
+<p><a href="https://airflow.readthedocs.io/en/stable/_api/airflow/models/dag/index.html">Defining the DAG</a> is very easy:</p>
+
+<pre><code>dag = DAG(dag_id='temperatures',
+          start_date=datetime(2019, 1, 1))
+</code></pre>
+
+<p>Main thing here is the DAG has an id so it can be used as a namespace of tasks.</p>
+
+<h3 id="tasks-and-operators">Tasks and operators</h3>
+
+<p>I created a script for each analysis phase (tidy, transform, visualize and model) and each script/analysis phase also corresponds with a task. All tasks look more or less like this:</p>
+
+<pre><code>tidy = BashOperator(
+    task_id='tidy',
+    bash_command=f'{os.getcwd()}/exec/tidy-script.R {os.getcwd()}/data/tidy-temperatures.csv',
+    dag=dag)
+</code></pre>
+
+<p>An operator is the template for the task. Tasks are closely related to operators. Just as classes in object-oriented programming are templates which can be instantiated, so operators are templates which can be instantiated. An instantiated operator is called a task. In this case the task is <code>tidy</code>.</p>
+
+<p>There was no real alternative to using the <a href="https://airflow.apache.org/docs/stable/howto/operator/bash.html">BashOperator</a>. At some time work was done on an <a href="https://github.com/apache/airflow/pull/3115">operator specific to R</a> but the work seems to have stalled since the PR containing the changes was never merged in the main Airflow branch.</p>
+
+<p>We use the <code>getcwd</code> method from the <code>os</code> module as to be able to run the DAG in different environments. The bash command always expects an absolute path although I couldn&rsquo;t find this documented anywhere. Experiments with relative paths didn&rsquo;t pan out.</p>
+
+<h3 id="defining-the-dependencies">Defining the dependencies</h3>
+
+<p>Dependencies are defined as:</p>
+
+<pre><code>clean &gt;&gt; tidy &gt;&gt; transform &gt;&gt; [visualize, model]
+</code></pre>
+
+<p>Dependencies <a href="https://airflow.apache.org/docs/stable/tutorial.html#setting-up-dependencies">can be configured</a> either by using the <code>set_upstream</code> and <code>set_downstream</code> functions or by using the bit shift operators <code>&gt;&gt;</code> and <code>&lt;&lt;</code>. The bit shift operators are more readable. Note as well this doesn&rsquo;t mean you can&rsquo;t define the same dependency for multiple tasks at once. You can do this by using brackets.</p>
+
+<h3 id="running-the-dag">Running the DAG</h3>
+
+<p>Following the instructions in the <a href="https://github.com/IsaacVerm/reproseries/blob/master/README.md">reproseries README</a> it&rsquo;s very easy to run the analysis with Airflow:</p>
+
+<pre><code>airflow backfill temperatures -s 2019-01-01
+</code></pre>
+
+<p>I do not use the start date but when it&rsquo;s not specified <code>Airflow</code> throws an exception asking to provide at least a start date. In the <a href="(https://airflow.apache.org/docs/stable/cli.html#backfill)">backfill documentation</a> however it&rsquo;s not a mandatory argument. You can specify any date as start date as long as it&rsquo;s a date in the past.</p>
+
+<p>When you run the command above you get all the results in the terminal. <code>Airflow</code> also provides a UI which helps in seeing what tasks are in progress or debugging with logs if something went wrong. There&rsquo;s no need to configure this UI and it provides a lot out of the box. The graph view for example shows how the tasks are related and the result for each task in the last run.</p>
+
+<p><img src="/airflow-graph-view.png" alt="airflow graph view" /></p>
+
+<p>This is almost a literal mapping of the theoretical framework applied from the <a href="https://r4ds.had.co.nz/introduction.html">R for Data Science</a> book.</p>
+
+<p><img src="/data-analysis-phases-r-for-data-science.png" alt="data analysis phases r for data science" /></p>
+
+<p>The clean job is added just to make sure previously saved data is removed before starting the next run.</p>
+
+<p>Having easy access to the logs is also handy to see what exactly went wrong:</p>
+
+<p><img src="/airflow-logs.png" alt="airflow logs" /></p>
+
+<p>Other views are available to see runs by status (succesful, failed , queued, &hellip;), see how long each task took,&hellip;</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>I just scratched the <code>Airflow</code> surface in this post. There&rsquo;s way more. We could for example experiment with the input data and see how it changes the model result. The above should however provide a solid foundation.</p>
+
+<p>Code for this post can as usual be found in the <a href="https://github.com/IsaacVerm/reproseries">reproseries repository</a>. The README contains an <code>Airflow</code> part detailing how to do the setup, how to run airflow, how to get access to the webserver,&hellip;</p>
+
+		</div>
+	</div>
+</body>
+</html>
