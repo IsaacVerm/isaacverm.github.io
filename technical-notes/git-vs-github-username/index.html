@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="git and GitHub username are different things" />
+<meta property="og:description" content="Code for this post can be found in the config-username branch of the git-examples repository.
+ Your username on GitHub does not have to match your git username. Let&rsquo;s say I change my name to &ldquo;a&rdquo; and commit a file called whoami. This file is pushed to GitHub.
+git config --global user.name &quot;a&quot;; echo a &gt;&gt; whoami; git commit -m &quot;whoami a&quot; git push;  I can see my name has changed:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/technical-notes/git-vs-github-username/" />
+<meta property="article:published_time" content="2020-01-06T14:41:56+01:00" />
+<meta property="article:modified_time" content="2020-01-06T14:41:56+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="git and GitHub username are different things"/>
+<meta name="twitter:description" content="Code for this post can be found in the config-username branch of the git-examples repository.
+ Your username on GitHub does not have to match your git username. Let&rsquo;s say I change my name to &ldquo;a&rdquo; and commit a file called whoami. This file is pushed to GitHub.
+git config --global user.name &quot;a&quot;; echo a &gt;&gt; whoami; git commit -m &quot;whoami a&quot; git push;  I can see my name has changed:"/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">git and GitHub username are different things</h1>
+			<div class="meta">Posted at &mdash; Jan 6, 2020</div>
+		</div>
+
+		<div class="markdown">
+			<blockquote>
+<p>Code for this post can be found in the <a href="https://github.com/IsaacVerm/git-examples/tree/config-username">config-username</a> branch of the git-examples repository.</p>
+</blockquote>
+
+<p><a href="https://help.github.com/en/github/using-git/setting-your-username-in-git">Your username on GitHub does not have to match your git username</a>. Let&rsquo;s say I change my name to &ldquo;a&rdquo; and commit a file called whoami. This file is pushed to GitHub.</p>
+
+<pre><code>git config --global user.name &quot;a&quot;;
+echo a &gt;&gt; whoami;
+git commit -m &quot;whoami a&quot;
+git push;
+</code></pre>
+
+<p>I can see my name has changed:</p>
+
+<pre><code>git config user.name
+</code></pre>
+
+<p>Now let&rsquo;s change my name to &ldquo;b&rdquo;:</p>
+
+<pre><code>git config --global user.name &quot;b&quot;
+echo b &gt;&gt; whoami;
+git commit -m &quot;whoami b&quot;
+git push;
+</code></pre>
+
+<p>With the following command I can see which users were responsible for each commit (<a href="https://git-scm.com/docs/git-log">git log formatting</a> is quite powerful by the way).</p>
+
+<pre><code>git log --pretty=&quot;format:%s - %an&quot; -2
+</code></pre>
+
+<p>Which gives:</p>
+
+<pre><code>whoami b - b
+whoami a - a
+</code></pre>
+
+<p>The first column is the commit message (the <code>%s</code> subject part), the part after the dash is the author of the commit (<code>%an</code>). As you can see the commits are linked to 2 different authors because we changed our name locally inbetween commits. On GitHub however you won&rsquo;t see this because there only the GitHub username is displayed:</p>
+
+<p><img src="/github-username-change.png" alt="github username change" /></p>
+
+		</div>
+	</div>
+</body>
+</html>
