@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="change editor used by git" />
+<meta property="og:description" content="By default the Mac installation of git uses vim as editor. If you&rsquo;re not familiar with vim this can be quite hard. I&rsquo;m used to Visual Code and it&rsquo;s easy to configure Visual code as the default:
+git config --global core.editor &quot;code&quot;  You can see for yourself the configuration has been updated. Either by running the git config command with the --list option:
+git config --list | grep core.editor  Or by verifying the config file itself." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/technical-notes/change-editor-git/" />
+<meta property="article:published_time" content="2020-01-06T15:38:32+01:00" />
+<meta property="article:modified_time" content="2020-01-06T15:38:32+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="change editor used by git"/>
+<meta name="twitter:description" content="By default the Mac installation of git uses vim as editor. If you&rsquo;re not familiar with vim this can be quite hard. I&rsquo;m used to Visual Code and it&rsquo;s easy to configure Visual code as the default:
+git config --global core.editor &quot;code&quot;  You can see for yourself the configuration has been updated. Either by running the git config command with the --list option:
+git config --list | grep core.editor  Or by verifying the config file itself."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">change editor used by git</h1>
+			<div class="meta">Posted at &mdash; Jan 6, 2020</div>
+		</div>
+
+		<div class="markdown">
+			<p>By default the Mac installation of git uses vim as editor. If you&rsquo;re not familiar with vim this can be quite hard. I&rsquo;m used to Visual Code and it&rsquo;s easy to configure Visual code as the default:</p>
+
+<pre><code>git config --global core.editor &quot;code&quot;
+</code></pre>
+
+<p>You can see for yourself the configuration has been updated. Either by running the <code>git config</code> command with the <code>--list</code> option:</p>
+
+<pre><code>git config --list | grep core.editor
+</code></pre>
+
+<p>Or by verifying the config file itself. You can find the path of the config file by adding the <code>--show-origin</code> option.</p>
+
+<pre><code>git config --list --show-origin | grep core.editor;
+cat GIT_CONFIG_FILE_PATH | grep editor
+</code></pre>
+
+<p>If you know run a command which uses the editor (like for example <code>git commit</code>) Visual Code will be opened.</p>
+
+<p><img src="/git-commit-visual-code.png" alt="git commit visual code" /></p>
+
+		</div>
+	</div>
+</body>
+</html>

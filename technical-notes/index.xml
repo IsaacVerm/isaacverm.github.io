@@ -6,10 +6,21 @@
     <description>Recent content in Technical-notes on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 06 Jan 2020 14:41:56 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 06 Jan 2020 15:38:32 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/technical-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>change editor used by git</title>
+      <link>https://isaacverm.github.io/technical-notes/change-editor-git/</link>
+      <pubDate>Mon, 06 Jan 2020 15:38:32 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/technical-notes/change-editor-git/</guid>
+      <description>By default the Mac installation of git uses vim as editor. If you&amp;rsquo;re not familiar with vim this can be quite hard. I&amp;rsquo;m used to Visual Code and it&amp;rsquo;s easy to configure Visual code as the default:
+git config --global core.editor &amp;quot;code&amp;quot;  You can see for yourself the configuration has been updated. Either by running the git config command with the --list option:
+git config --list | grep core.editor  Or by verifying the config file itself.</description>
+    </item>
     
     <item>
       <title>git and GitHub username are different things</title>
