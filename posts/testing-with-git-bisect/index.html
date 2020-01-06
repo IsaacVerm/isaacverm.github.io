@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Testing with git bisect" />
+<meta property="og:description" content="What&rsquo;s git bisect and why use it? While browsing the git documentation, I noticed there are some debugging git commands I never heard about before. git bisect in particular seemed interesting. With git bisect it&rsquo;s easy to track down when and where a bug was introduced. In this post I&rsquo;ll cover the same use cases as in the git documentation but with another example. This way I can be sure I thoroughly understood how to use git bisect." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/posts/testing-with-git-bisect/" />
+<meta property="article:published_time" content="2020-01-05T19:21:53+01:00" />
+<meta property="article:modified_time" content="2020-01-05T19:21:53+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Testing with git bisect"/>
+<meta name="twitter:description" content="What&rsquo;s git bisect and why use it? While browsing the git documentation, I noticed there are some debugging git commands I never heard about before. git bisect in particular seemed interesting. With git bisect it&rsquo;s easy to track down when and where a bug was introduced. In this post I&rsquo;ll cover the same use cases as in the git documentation but with another example. This way I can be sure I thoroughly understood how to use git bisect."/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">Testing with git bisect</h1>
+			<div class="meta">Posted at &mdash; Jan 5, 2020</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<h2 id="what-s-git-bisect-and-why-use-it">What&rsquo;s git bisect and why use it?</h2>
+
+<p>While browsing the git documentation, I noticed there are some debugging git commands I never heard about before. <a href="https://git-scm.com/docs/git-bisect-lk2009">git bisect</a> in particular seemed interesting. With <code>git bisect</code> it&rsquo;s easy to track down when and where a bug was introduced. In this post I&rsquo;ll cover the same use cases as in the git documentation but with another example. This way I can be sure I thoroughly understood how to use <code>git bisect</code>. Having said that, I won&rsquo;t go into the inner workings of the bisect algorithm.</p>
+
+<p>The basic procedure of <code>git bisect</code> contains of the following steps:</p>
+
+<ul>
+<li>mark a commit as good</li>
+<li>mark a commit as bad</li>
+<li>go through one or more commits inbetween the good and bad commit</li>
+<li>for each commit decide if it&rsquo;s broken or not</li>
+</ul>
+
+<p>By marking a commit as good and another one as bad, you define a range of commits in which the bug could have occured. The closer the good and bad commits can be, the less time it will take <code>git bisect</code> to pinpoint where things went wrong.</p>
+
+<p>By doing a <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">binary search</a> of commits, we end up with the culpable commit. Going through the commits can be done either automatically or manually. Conceptually it doesn&rsquo;t make a lot of difference since both approaches make a judgement on whether a commit broke something or not. Let&rsquo;s first have a look at a manual example.</p>
+
+<h2 id="manual-bisecting">Manual bisecting</h2>
+
+<p>I added a branch <code>bisect-main</code> to the <a href="https://github.com/IsaacVerm/git-examples">git-examples repository</a>. The only file checked into this branch is <code>status</code> and the branch contains 10 commits. The first 5 commits are all fine since they either contain the words <em>good</em> or <em>still good</em>. However, from the sixth commit I started making mistakes and put either <em>bad</em> or <em>still bad</em> in <code>status</code>. To find where things went wrong I could manually check out the commits one by one and see where the text started changing. Next to being boring and long, this also only works in simple examples like the ones I used. Once you have to run more elaborate tests to verify if a commit introduced a bug or not, this approach quickly becomes very tedious. <code>git bisect</code> to the rescue.</p>
+
+<p>Before getting started, make sure to have the <code>bisect-main</code> branch of the <code>git-examples</code> repository checked out. To start bisecting run <code>git bisect start</code>. If you run <code>git status</code> you will be notified you&rsquo;re bisecting. First thing to do now is mark a commit as good and a commit as bad. To get all the commits I run:</p>
+
+<pre><code>git log --oneline
+</code></pre>
+
+<p>For each commit you get its <a href="https://ericsink.com/vcbe/html/cryptographic_hashes.html">hash</a> and message.</p>
+
+<pre><code>5e19039 (HEAD -&gt; bisect-main, origin/bisect-main) commit 10
+f77e2fd commit 9
+abef51d commit 8
+58aa92a commit 7
+c3c0223 commit 6
+ecb3e7a commit 5
+4517f34 commit 4
+2dc4272 commit 3
+4615bfa commit 2
+7c6d6a0 commit 1
+</code></pre>
+
+<p>I know the first commit (<code>7c6d6a0</code>) is good so I run <code>git bisect good 7c6d6a0</code>. I&rsquo;m looking at the last commit and see it&rsquo;s bad so I run <code>git bisect bad 5e19039</code>. A shortcut not to specify the hash is to run <code>git bisect bad</code> which automatically marks the current commit as bad.</p>
+
+<p>After marking both a good and bad commit, <code>HEAD</code> gets detached to a commit somewhere in the middle. Where exactly is decided by the bisect algorithm. Since I have 10 commits it&rsquo;s reasonable for the first bisecting commit to be somewhere in the middle (since <code>git bisect</code> is based on using a binary search). Running <code>git log --oneline -1</code> shows it&rsquo;s commit 5 (out of 10).</p>
+
+<p>The 5th commit is still a good one (we can see the word good in the <code>status</code> file) so we mark it as good by running <code>git bisect good</code>. We know the 5th commit is good and the last 10th commit is bad so the bug must have occured somewhere in between. <code>HEAD</code> will detach again to a commit in between commit 5 and commit 10. We repeat the same process until no more steps are proposed by <code>git bisect</code>. A message is displayed saying commit 6 is the first bad commit. This is correct!</p>
+
+<p>Run <code>git bisect reset</code> to return to the tip of the branch.</p>
+
+<h2 id="bisecting-with-script">Bisecting with script</h2>
+
+<p>The manual procedure described above was effective but a bit cumbersome. For each commit proposed by the algorithm we had to manually mark it as either good or bad. Luckily there&rsquo;s also an option to run a script to do this testing for us. The only requirement for this script is it returns an exit code of 0 when the commit is good and anything else when something went wrong. A simple test in our case could be <code>grep &quot;good&quot; status</code>. This returns 0 when good is found in the <code>status</code> file and 1 it wasn&rsquo;t not found. We add this command to a script called <code>status-contains-good.sh</code>. It&rsquo;s possible to run it inline as well but I find that rather messy. Don&rsquo;t forget to make the script executable by running <code>chmod +x</code> on it.</p>
+
+<p>The first part of the procedure is the same as for manual. We start <code>git bisect</code> and mark a commit as good and a commit as bad:</p>
+
+<pre><code>git bisect start;
+git bisect good 7c6d6a0;
+git bisect bad 5e19039;
+</code></pre>
+
+<p>However, instead of going through the commits one by one we now run <code>git bisect run ./status-contains-good.sh</code>. Just as before commit 6 is identified as the culpable.</p>
+
+<p>If you run <code>git bisect log</code> you get to see exactly what happened:</p>
+
+<pre><code>git bisect start
+# good: [7c6d6a0404899ca84012d2a2c80cdaaee6c43d42] commit 1
+git bisect good 7c6d6a0404899ca84012d2a2c80cdaaee6c43d42
+# bad: [5e19039f2e63a02347ec4931bfea987d93457062] commit 10
+git bisect bad 5e19039f2e63a02347ec4931bfea987d93457062
+# good: [ecb3e7af1c9f79ba1d3591f481eb7fc92b0ef2d0] commit 5
+git bisect good ecb3e7af1c9f79ba1d3591f481eb7fc92b0ef2d0
+# bad: [58aa92a1068ce75361967b895b894eff4712e17e] commit 7
+git bisect bad 58aa92a1068ce75361967b895b894eff4712e17e
+# bad: [c3c022349c7510803acae6adaac7787623688a15] commit 6
+git bisect bad c3c022349c7510803acae6adaac7787623688a15
+# first bad commit: [c3c022349c7510803acae6adaac7787623688a15] commit 6
+</code></pre>
+
+<p>As you can see the log file makes no difference between those commits marked good/bad by ourselves (the first and last ones) and those marked good/bad by the script (commit 5, 6 and 7).</p>
+
+<p>Now you know where things went wrong but not which change caused the bug. If you use atomic commits (which is a best practice anyway) it becomes real easy to pinpoint the issue. Running <code>git show c3c0223</code> (hash of commit 6) you get all the changes introduced by commit 6:</p>
+
+<pre><code>commit c3c022349c7510803acae6adaac7787623688a15 (HEAD, refs/bisect/bad)
+Author: IsaacVerm &lt;isaacverm@gmail.com&gt;
+Date:   Mon Jan 6 11:07:09 2020 +0100
+
+    commit 6
+
+diff --git a/status b/status
+index 476e93d..44d6628 100644
+--- a/status
++++ b/status
+@@ -1 +1 @@
+-good
+\ No newline at end of file
++bad
+\ No newline at end of file
+</code></pre>
+
+<p>As you can see a line with good has been removed (<code>-</code>) and a line with bad has been added (<code>+</code>).</p>
+
+<p>In real life tests are more complicated but in essence it&rsquo;s the same principle. Take for example the <a href="https://github.com/IsaacVerm/easy-newspapers">easy newspaper</a> project I did some time ago. E2E tests using Cypress were added and you can leverage the power of these tests. If you ever notice something not right you can run the tests as a script with <code>npx cypress run</code>.</p>
+
+		</div>
+	</div>
+</body>
+</html>

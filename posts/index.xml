@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Dec 2019 14:10:22 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2020 19:21:53 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Testing with git bisect</title>
+      <link>https://isaacverm.github.io/posts/testing-with-git-bisect/</link>
+      <pubDate>Sun, 05 Jan 2020 19:21:53 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/testing-with-git-bisect/</guid>
+      <description>What&amp;rsquo;s git bisect and why use it? While browsing the git documentation, I noticed there are some debugging git commands I never heard about before. git bisect in particular seemed interesting. With git bisect it&amp;rsquo;s easy to track down when and where a bug was introduced. In this post I&amp;rsquo;ll cover the same use cases as in the git documentation but with another example. This way I can be sure I thoroughly understood how to use git bisect.</description>
+    </item>
     
     <item>
       <title>Reproducible analysis: orchestration</title>
