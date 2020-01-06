@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Fractured</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="git add is a multipurpose command" />
+<meta property="og:description" content="git add has multiple uses. To follow along create an empty repository:
+mkdir repo; cd repo; git init;  Adds untracked files to the index First create a new file with touch test. If we run git status -s now, you can see the file is untracked because ?? test is displayed (a full explanation of each abbreviation in short format can be found here).
+Now we can update the index:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://isaacverm.github.io/technical-notes/git-add-multi-purpose/" />
+<meta property="article:published_time" content="2020-01-06T16:33:12+01:00" />
+<meta property="article:modified_time" content="2020-01-06T16:33:12+01:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="git add is a multipurpose command"/>
+<meta name="twitter:description" content="git add has multiple uses. To follow along create an empty repository:
+mkdir repo; cd repo; git init;  Adds untracked files to the index First create a new file with touch test. If we run git status -s now, you can see the file is untracked because ?? test is displayed (a full explanation of each abbreviation in short format can be found here).
+Now we can update the index:"/>
+<link
+    href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="post-header">
+			<h1 class="title">git add is a multipurpose command</h1>
+			<div class="meta">Posted at &mdash; Jan 6, 2020</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p><code>git add</code> has <a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">multiple uses</a>. To follow along create an empty repository:</p>
+
+<pre><code>mkdir repo;
+cd repo;
+git init;
+</code></pre>
+
+<h2 id="adds-untracked-files-to-the-index">Adds untracked files to the index</h2>
+
+<p>First create a new file with <code>touch test</code>. If we run <code>git status -s</code> now, you can see the file is untracked because <code>?? test</code> is displayed (a full explanation of each abbreviation in short format can be found <a href="https://git-scm.com/docs/git-status#_short_format">here</a>).</p>
+
+<p>Now we can update the index:</p>
+
+<pre><code>git add test
+</code></pre>
+
+<p>The output of <code>git status -s</code> changes to <code>A  test</code>. A for added because the file is added to the index.</p>
+
+<h2 id="adds-modified-files-to-the-index">Adds modified files to the index</h2>
+
+<p>Suppose we make a commit with test included:</p>
+
+<pre><code>git commit -m &quot;add test&quot;
+</code></pre>
+
+<p>We make a change to the test file and add the file again:</p>
+
+<pre><code>echo a &gt;&gt; test;
+git add test
+</code></pre>
+
+<p>Instead of showing <code>?? test</code> as it would for untracked files, it now shows <code>M test</code>.</p>
+
+<h2 id="marks-merge-conflicts-as-resolved">Marks merge conflicts as resolved</h2>
+
+<p>A merge conflict can occur in several situations but one of the most common ones is if <a href="https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts">the same file is changed in 2 different commits</a>. The easiest way to simulate this is as follows:</p>
+
+<ul>
+<li>we create a file <code>test</code> in the main branch and commit it</li>
+<li>we create a new branch based on this main branch in which we change <code>test</code></li>
+<li>we update <code>test</code> again in the main branch and commit it again</li>
+</ul>
+
+<p>You have to make sure changes occur on the same line of the file. If not there won&rsquo;t be a merge conflict since git can automatically resolve situations in which conflicts occur on different line numbers.</p>
+
+<p>First set up the main branch:</p>
+
+<pre><code>echo a &gt; test;
+git add test;
+git commit -m &quot;add a&quot;
+</code></pre>
+
+<p>Now we create a conflict branch based on this main branch:</p>
+
+<pre><code>echo b &gt; test;
+git add test;
+git commit -m &quot;add b&quot;
+</code></pre>
+
+<p>Almost there, just modify the file once more in the main branch. If not there won&rsquo;t be any conflict. The main branch in the <a href="https://github.com/IsaacVerm/git-examples">git-examples</a> repository is called <code>add-multi-purpose</code> but you can call it whatever you want.</p>
+
+<pre><code>git checkout add-multi-purpose;
+echo c &gt; test;
+git add test;
+git commit -m &quot;add c&quot;
+</code></pre>
+
+<p>Now we can trigger the conflict:</p>
+
+<pre><code>git merge conflict-branch
+</code></pre>
+
+<p><code>git</code> automatically modifies the <code>test</code> file so it&rsquo;s easier to see where the conflicts arose:</p>
+
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+c
+=======
+b
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; conflict-branch
+</code></pre>
+
+<p>You have to pick an option by removing the arrows and equal signs not needed. Let&rsquo;s say we only want to keep our latest change to c. Now we you run <code>git add test</code> a message will appear saying all conflicts have been fixed (there was only one). Pay attention, the merge is only complete after running <code>git commit</code>.  If you run <code>git log --oneline -1</code> you&rsquo;ll see a merge commit has been created.</p>
+
+		</div>
+	</div>
+</body>
+</html>

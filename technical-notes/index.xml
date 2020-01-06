@@ -6,10 +6,21 @@
     <description>Recent content in Technical-notes on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 06 Jan 2020 15:38:32 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 06 Jan 2020 16:33:12 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/technical-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>git add is a multipurpose command</title>
+      <link>https://isaacverm.github.io/technical-notes/git-add-multi-purpose/</link>
+      <pubDate>Mon, 06 Jan 2020 16:33:12 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/technical-notes/git-add-multi-purpose/</guid>
+      <description>git add has multiple uses. To follow along create an empty repository:
+mkdir repo; cd repo; git init;  Adds untracked files to the index First create a new file with touch test. If we run git status -s now, you can see the file is untracked because ?? test is displayed (a full explanation of each abbreviation in short format can be found here).
+Now we can update the index:</description>
+    </item>
     
     <item>
       <title>change editor used by git</title>
