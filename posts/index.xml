@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Blog Isaac Verminck</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Jan 2020 19:21:53 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 07 Jan 2020 11:34:59 +0100</lastBuildDate>
     
 	<atom:link href="https://isaacverm.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reproducible analysis: environment</title>
+      <link>https://isaacverm.github.io/posts/reproducible-analysis-environment/</link>
+      <pubDate>Tue, 07 Jan 2020 11:34:59 +0100</pubDate>
+      
+      <guid>https://isaacverm.github.io/posts/reproducible-analysis-environment/</guid>
+      <description>Debug your app, not your environment.
+ Docker&amp;rsquo;s slogan is a good one. It&amp;rsquo;s a pity when you can&amp;rsquo;t focus on the work at hand because of environment issues. You end up trying to fix both your code and the environment at the same which frankly is just a world of pain. Docker helps with creating a reproducible environment so you can count on the environment being always in the state you want.</description>
+    </item>
     
     <item>
       <title>Testing with git bisect</title>
