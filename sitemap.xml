@@ -463,6 +463,11 @@
   </url>
   
   <url>
+    <loc>https://isaacverm.github.io/notebook-phrases/phrases/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://isaacverm.github.io/notebook-phrases/voc/</loc>
     <priority>0</priority>
   </url>
